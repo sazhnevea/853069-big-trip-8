@@ -90,9 +90,92 @@
 /*!*********************!*\
   !*** ./src/main.js ***!
   \*********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _make_filter_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./make-filter.js */ "./src/make-filter.js");
+/* harmony import */ var _make_point_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./make-point.js */ "./src/make-point.js");
+
+
+
+const filters = document.querySelector(`.trip-filter`);
+const pointsContainer = document.querySelector(`.trip-day__items`);
+
+filters.insertAdjacentHTML(`beforeend`, Object(_make_filter_js__WEBPACK_IMPORTED_MODULE_0__["default"])(`everything`, `checked`));
+filters.insertAdjacentHTML(`beforeend`, Object(_make_filter_js__WEBPACK_IMPORTED_MODULE_0__["default"])(`future`));
+filters.insertAdjacentHTML(`beforeend`, Object(_make_filter_js__WEBPACK_IMPORTED_MODULE_0__["default"])(`past`));
+
+const renderPoints = (dist, count = 7) => {
+  const points = new Array(count)
+    .fill()
+    .map(_make_point_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+  dist.insertAdjacentHTML(`beforeend`, points.join(``));
+};
+
+renderPoints(pointsContainer);
+
+const getRandomNumber = (min = 1, max = 100) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+
+filters.addEventListener(`click`, (evt) => {
+  const isFilterTarget = evt
+                         .target
+                         .classList
+                         .contains(`trip-filter__item`);
+  if (isFilterTarget) {
+    pointsContainer.innerHTML = ``;
+    renderPoints(pointsContainer, getRandomNumber(1, 20));
+  }
+});
+
+
+/***/ }),
+
+/***/ "./src/make-filter.js":
+/*!****************************!*\
+  !*** ./src/make-filter.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ((caption, checked = false) => `
+  <input type="radio" id="filter-everything" name="filter" value="everything" ${checked}>
+  <label class="trip-filter__item" for="filter-everything">${caption}</label>`);
+
+
+/***/ }),
+
+/***/ "./src/make-point.js":
+/*!***************************!*\
+  !*** ./src/make-point.js ***!
+  \***************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (() =>
+  `<article class="trip-point">
+     <i class="trip-icon">🚕</i>
+	 <h3 class="trip-point__title">Taxi to Airport</h3>
+	 <p class="trip-point__schedule">
+	   <span class="trip-point__timetable">10:00&nbsp;&mdash; 11:00</span>
+	   <span class="trip-point__duration">1h 30m</span>
+	 </p>
+	 <p class="trip-point__price">&euro;&nbsp;20</p>
+	 <ul class="trip-point__offers">
+	   <li>
+	     <button class="trip-point__offer">Order UBER +&euro;&nbsp;20</button>
+	   </li>
+	   <li>
+	     <button class="trip-point__offer">Upgrade to business +&euro;&nbsp;20</button>
+	   </li>
+	 </ul>
+  </article>`);
 
 
 /***/ })
