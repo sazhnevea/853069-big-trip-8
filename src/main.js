@@ -4,9 +4,7 @@ import makePoint from './make-point.js';
 const filters = document.querySelector(`.trip-filter`);
 const pointsContainer = document.querySelector(`.trip-day__items`);
 
-filters.insertAdjacentHTML(`beforeend`, makeFilter(`everything`, `checked`));
-filters.insertAdjacentHTML(`beforeend`, makeFilter(`future`));
-filters.insertAdjacentHTML(`beforeend`, makeFilter(`past`));
+filters.insertAdjacentHTML(`beforeend`, makeFilter());
 
 const renderPoints = (dist, count = 7) => {
   const points = new Array(count)
