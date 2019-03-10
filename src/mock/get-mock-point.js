@@ -13,7 +13,6 @@ const descLines = description.split(`. `);
 const getRandomValues = (arr, n = 3) =>
   Array.from({length: n}, () => getRandomIndex(arr)).join(`. `).trim();
 
-
 export const getMockPoint = function () {
   return {
     title: getRandomValue(pointsTitles),
