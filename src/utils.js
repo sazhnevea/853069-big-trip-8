@@ -2,7 +2,6 @@
 export const getRandomInteger = (min, max) =>
   Math.floor(min + Math.random() * (max + 1 - min));
 
-
 // Случайный индекс массива
 export const getRandomIndex = (array) =>
   getRandomInteger(0, array.length - 1);

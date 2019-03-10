@@ -1,7 +1,5 @@
 import getFilter from "./get-filter";
-import {getRandomInteger} from "./utils";
-import getTripPoint from "./get-trip-point";
-import {getPointsArray} from "./mock/get-points-array";
+import {getPointsFragment} from "./get-points-fragment";
 
 const filterNames = [
   `everything`,
@@ -9,28 +7,24 @@ const filterNames = [
   `past`,
 ];
 
-const MAX_QTY_POINTS = 20;
-const MIN_QTY_POINTS = 1;
-const START_QTY_POINTS = 7;
+const tripFilterForm = document.querySelector(`.trip-filter`);
+const tripDayItems = document.querySelector(`.trip-day__items`);
 
 const renderFilters = (filterNamesArray) => {
-  const formTripFilter = document.querySelector(`.trip-filter`);
   let fragment = ``;
   filterNamesArray.forEach((filterName) => {
     fragment += getFilter(filterName);
   });
-  formTripFilter.innerHTML = fragment;
+  tripFilterForm.innerHTML = fragment;
 };
 
-const renderTripPoints = (qtyTripPoints) => {
-  const tripDayItems = document.querySelector(`.trip-day__items`);
-  const pointsArray = getPointsArray(qtyTripPoints);
-  let fragment = ``;
-  for (let i = 0; i < qtyTripPoints; i++) {
-    fragment += getTripPoint(pointsArray[i]);
-  }
+const renderTripPoints = (fragment) => {
   tripDayItems.innerHTML = fragment;
 };
+
+// const tripFilterForm = document.querySelector(`.trip-filter`);
+
+// tripFilterForm.addEventListener(`change`, filterClickHandler);
 
 const filterClickHandler = (evt) => {
   const isFilterTarget = evt
@@ -38,11 +32,11 @@ const filterClickHandler = (evt) => {
                          .classList
                          .contains(`trip-filter__item`);
   if (isFilterTarget) {
-    renderTripPoints(getRandomInteger(MIN_QTY_POINTS, MAX_QTY_POINTS));
+    renderTripPoints(getPointsFragment());
   }
 };
 
-renderFilters(filterNames);
-renderTripPoints(START_QTY_POINTS);
+tripFilterForm.addEventListener(`click`, renderFilters(filterNames));
+tripDayItems.addEventListener(`click`, renderTripPoints(getPointsFragment()));
 
-document.body.addEventListener(`click`, filterClickHandler);
+tripFilterForm.addEventListener(`change`, filterClickHandler);
