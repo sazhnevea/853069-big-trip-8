@@ -1,10 +1,12 @@
 import {getMockPoint} from "./get-mock-point";
 
-export const getPointsArray = (pointsQty) => {
+export const getPointsArray = (points) => {
   const pointsArray = [];
-  for (let i = 0; i < pointsQty; i++) {
+
+  for (let i = 0; i < points; i++) {
     const point = getMockPoint();
     pointsArray.push(point);
   }
+
   return pointsArray;
 };

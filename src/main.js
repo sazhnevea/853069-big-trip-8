@@ -1,42 +1,42 @@
-import getFilter from "./get-filter";
+// закомментировал потому что убрал
+// вызов этой функции и линтер ругается
+// import getFilter from "./get-filter";
+
 import {getPointsFragment} from "./get-points-fragment";
 
-const filterNames = [
-  `everything`,
-  `future`,
-  `past`,
-];
+// закомментировал потому что убрал
+// вызов этого массива и линтер ругается
+// const filterNames = [
+//   `everything`,
+//   `future`,
+//   `past`,
+// ];
 
 const tripFilterForm = document.querySelector(`.trip-filter`);
 const tripDayItems = document.querySelector(`.trip-day__items`);
 
-const renderFilters = (filterNamesArray) => {
-  let fragment = ``;
-  filterNamesArray.forEach((filterName) => {
-    fragment += getFilter(filterName);
-  });
-  tripFilterForm.innerHTML = fragment;
-};
+// закомментировал потому что убрал
+// вызов этой функции и линтер ругается
+// const renderFilters = (names) => {
+//   let fragment = ``;
+//   names.forEach((name) => {
+//     fragment += getFilter(name);
+//   });
+//   tripFilterForm.innerHTML = fragment;
+// };
 
 const renderTripPoints = (fragment) => {
   tripDayItems.innerHTML = fragment;
 };
 
-// const tripFilterForm = document.querySelector(`.trip-filter`);
+// добавил это чтобы видеть что получается в итоге
 
-// tripFilterForm.addEventListener(`change`, filterClickHandler);
+renderTripPoints(getPointsFragment());
 
-const filterClickHandler = (evt) => {
-  const isFilterTarget = evt
-                         .target
-                         .classList
-                         .contains(`trip-filter__item`);
-  if (isFilterTarget) {
-    renderTripPoints(getPointsFragment());
-  }
+const filterClickHandler = () => {
+  renderTripPoints(getPointsFragment());
 };
 
-tripFilterForm.addEventListener(`click`, renderFilters(filterNames));
-tripDayItems.addEventListener(`click`, renderTripPoints(getPointsFragment()));
+tripFilterForm.addEventListener(`click`, () => filterClickHandler());
 
-tripFilterForm.addEventListener(`change`, filterClickHandler);
+// дата
