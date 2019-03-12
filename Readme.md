@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Евгений Сажнев](https://up.htmlacademy.ru/ecmascript/8/user/853069).
-* Наставник: [Сергей Вохмянин](https://htmlacademy.ru/profile/id530823).
+* Наставник: [Александр Мастеров](https://htmlacademy.ru/profile/id912463).
 
 ---
 
