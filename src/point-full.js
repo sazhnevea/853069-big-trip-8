@@ -15,11 +15,19 @@ export default class Point {
     };
 
     this._onSubmit = null;
+    this._onReset = null;
+
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
+    this._onResetButtonClick = this._onSubmitButtonClick.bind(this);
+
   }
 
   set onSubmit(fn) {
     this._onSubmit = fn;
+  }
+
+  set onReset(fn) {
+    this._onReset = fn;
   }
 
   get element() {
@@ -29,7 +37,7 @@ export default class Point {
   get template() {
     return `
    <article class="point">
-  <form action="" method="get">
+    <form action="" method="get">
     <header class="point__header">
       <label class="point__date">
         choose day
@@ -162,13 +170,13 @@ export default class Point {
     this._element = null;
   }
 
-  static checkForTrue(it) { // поставить в соовтетствии с порядком
-    return it === true;
-  }
-
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
     return typeof this._onSubmit === `function` && this._onSubmit();
+  }
+
+  _onResetButtonClick() {
+    return typeof this._onReset === `function` && this._onSubmit();
   }
 
   unbind() {

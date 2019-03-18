@@ -49,27 +49,21 @@ export default class Point {
     return this._element;
   }
 
-  bind() {
-    const editButton = this._element.querySelector(`.trip-point__title`);
-    editButton.addEventListener(`click`, this._onEditButtonClick.bind(this));
-  }
-
   unrender() {
     this.unbind();
     this._element = null;
   }
 
-  static checkForTrue(it) { // поставить в соовтетствии с порядком
-    return it === true;
-  }
-
   _onEditButtonClick() {
-    console.log(`click`);
     return typeof this._onEdit === `function` && this._onEdit();
   }
 
+  bind() {
+    const editButton = this._element.querySelector(`.trip-point__title`);
+    editButton.addEventListener(`click`, this._onEditButtonClick.bind(this));
+  }
+
   unbind() {
-    console.log(this._element)
     this._element.querySelector(`.trip-point__title`)
           .removeEventListener(`click`, this._onEditButtonClick);
   }
