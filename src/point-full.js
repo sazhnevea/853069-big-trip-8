@@ -1,7 +1,12 @@
-import {createElement} from './create-element.js';
+import Component from './сomponent.js';
+import {isFunction} from './predicates.js';
+import {
+  Icons,
+} from './point/';
 
-export default class Point {
+export default class PointFull extends Component {
   constructor(data) {
+    super();
     this._title = data.title;
     this._type = data.type;
     this._picture = data.picture;
@@ -10,16 +15,12 @@ export default class Point {
     this._time = data.time;
     this._offers = data.offers;
 
-    this._element = null;
-    this._state = {
-    };
-
     this._onSubmit = null;
     this._onReset = null;
+    this._state.isDate = false;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
-    this._onResetButtonClick = this._onSubmitButtonClick.bind(this);
-
+    this._onResetButtonClick = this._onResetButtonClick.bind(this);
   }
 
   set onSubmit(fn) {
@@ -28,10 +29,6 @@ export default class Point {
 
   set onReset(fn) {
     this._onReset = fn;
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -45,7 +42,7 @@ export default class Point {
       </label>
 
       <div class="travel-way">
-        <label class="travel-way__label" for="travel-way__toggle">✈️</label>
+        <label class="travel-way__label" for="travel-way__toggle">${Icons.get(this._type)}</label>
 
         <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
 
@@ -152,36 +149,33 @@ export default class Point {
 `.trim();
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
   bind() {
     const submitButton = this._element.querySelector(`.point__button--save`);
     const resetButton = this._element.querySelector(`button[type="reset"]`);
-    submitButton.addEventListener(`click`, this._onSubmitButtonClick.bind(this));
-    resetButton.addEventListener(`click`, this._onSubmitButtonClick.bind(this));
+    submitButton.addEventListener(`click`, this._onSubmitButtonClick);
+    resetButton.addEventListener(`click`, this._onResetButtonClick);
   }
 
   unrender() {
     this.unbind();
+    this._element.remove();
     this._element = null;
   }
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-    return typeof this._onSubmit === `function` && this._onSubmit();
+    return isFunction(this._onSubmit) ? this._onSubmit() : null;
   }
 
   _onResetButtonClick() {
-    return typeof this._onReset === `function` && this._onSubmit();
+    return isFunction(this._onReset) ? this._onReset() : null;
   }
 
   unbind() {
     this._element.querySelector(`.point__button--save`)
           .removeEventListener(`click`, this._onSubmitButtonClick);
+    this._element.querySelector(`button[type="reset"]`)
+          .removeEventListener(`click`, this._onResetButtonClick);
   }
 
 }
