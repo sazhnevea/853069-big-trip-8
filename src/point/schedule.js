@@ -9,7 +9,10 @@ const makeTime = (ms) => ({
   H: Math.floor(ms / Time.HOUR) % 24,
   M: Math.floor(ms / Time.MINUTE) % 60,
 });
+
+// задел для следующего задания
 import * as moment from "moment";
+console.log(moment());
 
 const formatTime = (date) => date.toTimeString().slice(0, 5);
 
