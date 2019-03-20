@@ -1,4 +1,4 @@
-const Icons = new Map([
+export const Icons = new Map([
   [`Taxi`, `🚕`],
   [`Bus`, `🚌`],
   [`Train`, `🚂`],

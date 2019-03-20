@@ -14,18 +14,20 @@ const pointsContainer = document.querySelector(`.trip-day__items`);
 
 const generateFilters = () => filterNames.map(getFilter).join(``);
 
-const generatePoints = (count = 7) => {
-  return [...Array(count)].map(() => new Point(getPointData()));
+const generatePointsData = (count = 7) => {
+  return [...Array(count)].map(() => getPointData());
 };
 
 const renderFilters = (element) => {
   filterContainer.innerHTML = element;
 };
 
-const fullPointComponent = new PointFull(getPointData());
+const renderPoints = (pointsData) => {
+  pointsData.forEach((pointData) => {
 
-const renderPoints = (components) => {
-  components.forEach((pointComponent) => {
+    const pointComponent = new Point(pointData);
+    const fullPointComponent = new PointFull(pointData);
+
     pointsContainer.appendChild(pointComponent.render());
 
     pointComponent.onEdit = () => {
@@ -44,8 +46,8 @@ const renderPoints = (components) => {
 
 filterContainer.addEventListener(`change`, () => {
   pointsContainer.innerHTML = ``;
-  renderPoints(generatePoints());
+  renderPoints(generatePointsData());
 });
 
 renderFilters(generateFilters());
-renderPoints(generatePoints());
+renderPoints(generatePointsData());

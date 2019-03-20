@@ -1,13 +1,15 @@
-import {createElement} from './create-element.js';
+import Component from './сomponent.js';
+import {isFunction} from './predicates.js';
+
 import {
   getIcon,
   getOffers,
   getSchedule,
 } from './point/';
 
-
-export default class Point {
+export default class Point extends Component {
   constructor(data) {
+    super();
     this._title = data.title;
     this._type = data.type;
     this._picture = data.picture;
@@ -16,20 +18,12 @@ export default class Point {
     this._time = data.time;
     this._offers = data.offers;
 
-    this._element = null;
-    this._state = {
-    };
-
     this._onEdit = null;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
   }
 
   set onEdit(fn) {
     this._onEdit = fn;
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -43,24 +37,19 @@ export default class Point {
     </article>`.trim();
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
   unrender() {
     this.unbind();
+    this._element.remove();
     this._element = null;
   }
 
   _onEditButtonClick() {
-    return typeof this._onEdit === `function` && this._onEdit();
+    return isFunction(this._onEdit) ? this._onEdit() : null;
   }
 
   bind() {
     const editButton = this._element.querySelector(`.trip-point__title`);
-    editButton.addEventListener(`click`, this._onEditButtonClick.bind(this));
+    editButton.addEventListener(`click`, this._onEditButtonClick);
   }
 
   unbind() {
