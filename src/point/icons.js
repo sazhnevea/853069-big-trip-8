@@ -1,15 +1,4 @@
-export const Icons = new Map([
-  [`Taxi`, `🚕`],
-  [`Bus`, `🚌`],
-  [`Train`, `🚂`],
-  [`Ship`, `🛳️`],
-  [`Transport`, `🚊`],
-  [`Drive`, `🚗`],
-  [`Flight`, `✈️`],
-  [`Check-in`, `🏨`],
-  [`Sightseeing`, `🏛️`],
-  [`Restaurant`, `🍴`],
-]);
+import {Icons} from '../travel-types.js';
 
 export const getIcon = (type) =>
   `<i class="trip-icon">${Icons.get(type)}</i>`;

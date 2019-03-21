@@ -37,22 +37,16 @@ export default class Point extends Component {
     </article>`.trim();
   }
 
-  unrender() {
-    this.unbind();
-    this._element.remove();
-    this._element = null;
-  }
-
   _onEditButtonClick() {
-    return isFunction(this._onEdit) ? this._onEdit() : null;
+    return isFunction(this._onEdit) && this._onEdit();
   }
 
-  bind() {
+  createListeners() {
     const editButton = this._element.querySelector(`.trip-point__title`);
     editButton.addEventListener(`click`, this._onEditButtonClick);
   }
 
-  unbind() {
+  removeListeners() {
     this._element.querySelector(`.trip-point__title`)
           .removeEventListener(`click`, this._onEditButtonClick);
   }

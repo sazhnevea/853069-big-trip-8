@@ -1,8 +1,6 @@
 import Component from './сomponent.js';
 import {isFunction} from './predicates.js';
-import {
-  Icons,
-} from './point/';
+import {Icons} from './travel-types.js';
 
 export default class PointFull extends Component {
   constructor(data) {
@@ -149,29 +147,23 @@ export default class PointFull extends Component {
 `.trim();
   }
 
-  bind() {
+  createListeners() {
     const submitButton = this._element.querySelector(`.point__button--save`);
     const resetButton = this._element.querySelector(`button[type="reset"]`);
     submitButton.addEventListener(`click`, this._onSubmitButtonClick);
     resetButton.addEventListener(`click`, this._onResetButtonClick);
   }
 
-  unrender() {
-    this.unbind();
-    this._element.remove();
-    this._element = null;
-  }
-
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-    return isFunction(this._onSubmit) ? this._onSubmit() : null;
+    return isFunction(this._onSubmit) && this._onSubmit();
   }
 
   _onResetButtonClick() {
-    return isFunction(this._onReset) ? this._onReset() : null;
+    return isFunction(this._onReset) && this._onReset();
   }
 
-  unbind() {
+  removeListeners() {
     this._element.querySelector(`.point__button--save`)
           .removeEventListener(`click`, this._onSubmitButtonClick);
     this._element.querySelector(`button[type="reset"]`)
