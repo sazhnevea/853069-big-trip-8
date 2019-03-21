@@ -3,7 +3,7 @@ import {isFunction} from './predicates.js';
 
 import {
   getIcon,
-  getOffers,
+  getOffersPoint,
   getSchedule,
 } from './point/';
 
@@ -33,7 +33,7 @@ export default class Point extends Component {
       <h3 class="trip-point__title">${this._title}</h3>
       ${getSchedule(this._time)}
       <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
-      ${this._offers.length > 0 ? getOffers(this._offers) : ``}
+      ${this._offers.length > 0 ? getOffersPoint(this._offers) : ``}
     </article>`.trim();
   }
 

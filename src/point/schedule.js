@@ -28,3 +28,14 @@ export const getSchedule = ({start, end}) => `
     <span class="trip-point__timetable">${formatTime(start)}&nbsp;&mdash; ${formatTime(end)}</span>
     <span class="trip-point__duration">${formatDuration(getDuration(start, end))}</span>
   </p>`;
+
+export const getTime = ({start, end}) => `
+    <label class="point__time">
+      ${formatTime(start)}&nbsp;&mdash; ${formatTime(end)}
+      <input class="point__input"
+        type="text"
+        value="${formatTime(start)}&nbsp;&mdash; ${formatTime(end)}"
+        name="time"
+        placeholder="${formatTime(start)}&nbsp;&mdash; ${formatTime(end)}">
+    </label>`;
+
