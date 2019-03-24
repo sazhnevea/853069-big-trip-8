@@ -3,7 +3,6 @@ const getChecked = (defaultData, userData) =>
 
 
 export const getTravelWay = (way) => {
-  console.log(way);
   return	`
   <div class="travel-way__select">
     <div class="travel-way__select-group">

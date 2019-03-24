@@ -1,35 +1,14 @@
-const Time = {
-  DAY: 86400000,
-  HOUR: 3600000,
-  MINUTE: 60000,
-};
+import moment from 'moment';
 
-const makeTime = (ms) => ({
-  D: Math.floor(ms / Time.DAY),
-  H: Math.floor(ms / Time.HOUR) % 24,
-  M: Math.floor(ms / Time.MINUTE) % 60,
-});
+const formatTime = (date) => date.format(`HH:MM`);
 
-const formatTime = (date) => date.toTimeString().slice(0, 5);
-
-const getDuration = (dateStart, dateEnd) => dateEnd - dateStart;
-
-const hasTimeValue = ([, value]) => value !== 0;
-const formatTimeValue = ([format, value]) => `${value}${format}`;
-
-const formatDuration = (ms) =>
-  Object.entries(makeTime(ms))
-    .filter(hasTimeValue)
-    .map(formatTimeValue)
-    .join(` `);
-
-export const getSchedule = ({start, end}) => `
+export const getTimeClosedPoint = ({start, end}) => `
   <p class="trip-point__schedule">
     <span class="trip-point__timetable">${formatTime(start)}&nbsp;&mdash; ${formatTime(end)}</span>
-    <span class="trip-point__duration">${formatDuration(getDuration(start, end))}</span>
+    <span class="trip-point__duration">${formatTime(moment(end.diff(start)))}</span>
   </p>`;
 
-export const getTime = ({start, end}) => `
+export const getTimeOpenedPoint = ({start, end}) => `
     <label class="point__time">
       ${formatTime(start)}&nbsp;&mdash; ${formatTime(end)}
       <input class="point__input"

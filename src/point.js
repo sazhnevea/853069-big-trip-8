@@ -4,7 +4,7 @@ import {isFunction} from './predicates.js';
 import {
   getIcon,
   getOffersPoint,
-  getSchedule,
+  getTimeClosedPoint,
 } from './point/';
 
 export default class Point extends Component {
@@ -31,7 +31,7 @@ export default class Point extends Component {
     <article class="trip-point">
       ${getIcon(this._type)}
       <h3 class="trip-point__title">${this._title}</h3>
-      ${getSchedule(this._time)}
+      ${getTimeClosedPoint(this._time)}
       <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
       ${this._offers.length > 0 ? getOffersPoint(this._offers) : ``}
     </article>`.trim();
@@ -49,5 +49,9 @@ export default class Point extends Component {
   removeListeners() {
     this._element.querySelector(`.trip-point__title`)
           .removeEventListener(`click`, this._onEditButtonClick);
+  }
+
+  update(data) {
+    this._price = data.price;
   }
 }

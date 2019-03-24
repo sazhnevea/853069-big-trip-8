@@ -36,7 +36,11 @@ const renderPoints = (pointsData) => {
       pointComponent.unrender();
     };
 
-    fullPointComponent.onSubmit = () => {
+    fullPointComponent.onSubmit = (newObject) => {
+      pointData.price = newObject.price;
+
+      pointComponent.update(pointData);
+
       pointComponent.render();
       pointsContainer.replaceChild(pointComponent.element, fullPointComponent.element);
       fullPointComponent.unrender();

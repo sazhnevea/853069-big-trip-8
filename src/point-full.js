@@ -1,13 +1,14 @@
 import Component from './сomponent.js';
 import {isFunction} from './predicates.js';
 import {Icons} from './travel-types.js';
-import {getTime,
+import {getTimeOpenedPoint,
   getTravelWay,
   getOffersFullPoint,
   getDescription,
   getImages,
   getPrice,
 } from './point/';
+
 
 export default class PointFull extends Component {
   constructor(data) {
@@ -23,9 +24,37 @@ export default class PointFull extends Component {
     this._onSubmit = null;
     this._onReset = null;
     this._state.isDate = false;
+    this._state.isTitle = false;
+
+
+    this._onChangePrice = this._onChangePrice.bind(this);
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onResetButtonClick = this._onResetButtonClick.bind(this);
+  }
+
+  _processForm(formData) {
+    const entry = {
+      price: ``,
+    };
+  
+    const pointEditMapper = PointFull.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+      // console.log(pair);
+      const [property, value] = pair;
+      pointEditMapper[property] && pointEditMapper[property](value);
+    }
+
+    return entry;
+  }
+
+
+  _onChangePrice() {
+    this._state.isTitle = !this._state.isTitle;
+    this.removeListeners();
+    this._partialUpdate();
+    this.createListeners();
   }
 
   set onSubmit(fn) {
@@ -65,7 +94,7 @@ export default class PointFull extends Component {
         </datalist>
       </div>
 
-      ${getTime(this._time)}
+      ${getTimeOpenedPoint(this._time)}
 
       ${getPrice(this._price)}
 
@@ -104,11 +133,22 @@ export default class PointFull extends Component {
     const resetButton = this._element.querySelector(`button[type="reset"]`);
     submitButton.addEventListener(`click`, this._onSubmitButtonClick);
     resetButton.addEventListener(`click`, this._onResetButtonClick);
+  
+    if (this._state.isDate) {
+      flatpickr(".card__date", { altInput: true, altFormat: "j F", dateFormat: "j F" });
+      flatpickr(".card__time", { enableTime: true, noCalendar: true, altInput: true, altFormat: "h:i K", dateFormat: "h:i K"});
+    }
+
   }
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-    return isFunction(this._onSubmit) && this._onSubmit();
+
+    const formData = new FormData(this._element.querySelector(`form`));
+    const newData = this._processForm(formData);
+    return isFunction(this._onSubmit) && this._onSubmit(newData);
+
+    this.update(newData);
   }
 
   _onResetButtonClick() {
@@ -120,6 +160,16 @@ export default class PointFull extends Component {
           .removeEventListener(`click`, this._onSubmitButtonClick);
     this._element.querySelector(`button[type="reset"]`)
           .removeEventListener(`click`, this._onResetButtonClick);
+  }
+
+  update(data) {
+    this._title = data.title;
+  }
+
+  static createMapper(target) {
+    return {
+      price: (value) => target.price = value,
+    };
   }
 
 }
