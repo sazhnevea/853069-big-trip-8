@@ -8,7 +8,7 @@ import {getTimeOpenedPoint,
   getImages,
   getPrice,
 } from './point/';
-
+import flatpickr from 'flatpickr';
 
 export default class PointFull extends Component {
   constructor(data) {
@@ -20,14 +20,18 @@ export default class PointFull extends Component {
     this._price = data.price;
     this._time = data.time;
     this._offers = data.offers;
+    this._destination = data.destination;
+
 
     this._onSubmit = null;
     this._onReset = null;
-    this._state.isDate = false;
-    this._state.isTitle = false;
-
+    this._state.isTime = false;
+    this._state.isPrice = false;
+    this._state.isDestination = false;
 
     this._onChangePrice = this._onChangePrice.bind(this);
+    this._onChangeTime = this._onChangeTime.bind(this);
+    this._onChangeDestination = this._onChangeDestination.bind(this);
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onResetButtonClick = this._onResetButtonClick.bind(this);
@@ -37,12 +41,12 @@ export default class PointFull extends Component {
     const entry = {
       price: ``,
     };
-  
+
     const pointEditMapper = PointFull.createMapper(entry);
 
     for (const pair of formData.entries()) {
-      // console.log(pair);
       const [property, value] = pair;
+      // eslint-disable-next-line no-unused-expressions
       pointEditMapper[property] && pointEditMapper[property](value);
     }
 
@@ -51,10 +55,28 @@ export default class PointFull extends Component {
 
 
   _onChangePrice() {
-    this._state.isTitle = !this._state.isTitle;
+    this._state.isPrice = !this._state.isPrice;
     this.removeListeners();
     this._partialUpdate();
     this.createListeners();
+  }
+
+  _onChangeTime() {
+    this._state.isTime = !this._state.isTime;
+    this.removeListeners();
+    this._partialUpdate();
+    this.createListeners();
+  }
+
+  _onChangeDestination() {
+    this._state.isDestination = !this._state.isDestination;
+    this.removeListeners();
+    this._partialUpdate();
+    this.createListeners();
+  }
+
+  _partialUpdate() {
+    this._element.innerHTML = this.template;
   }
 
   set onSubmit(fn) {
@@ -131,14 +153,14 @@ export default class PointFull extends Component {
   createListeners() {
     const submitButton = this._element.querySelector(`.point__button--save`);
     const resetButton = this._element.querySelector(`button[type="reset"]`);
+    const changeTime = this._element.querySelector(`.point__time .point__input`);
     submitButton.addEventListener(`click`, this._onSubmitButtonClick);
     resetButton.addEventListener(`click`, this._onResetButtonClick);
-  
-    if (this._state.isDate) {
-      flatpickr(".card__date", { altInput: true, altFormat: "j F", dateFormat: "j F" });
-      flatpickr(".card__time", { enableTime: true, noCalendar: true, altInput: true, altFormat: "h:i K", dateFormat: "h:i K"});
-    }
+    changeTime.addEventListener(`click`, this._onChangeTime);
 
+    if (this._state.isTime) {
+      flatpickr(`.point__time .point__input`, {enableTime: true, noCalendar: true, altInput: true, altFormat: `h:i K`, dateFormat: `h:i K`});
+    }
   }
 
   _onSubmitButtonClick(evt) {
@@ -146,8 +168,8 @@ export default class PointFull extends Component {
 
     const formData = new FormData(this._element.querySelector(`form`));
     const newData = this._processForm(formData);
-    return isFunction(this._onSubmit) && this._onSubmit(newData);
-
+    // eslint-disable-next-line no-unused-expressions
+    isFunction(this._onSubmit) && this._onSubmit(newData);
     this.update(newData);
   }
 
@@ -160,15 +182,25 @@ export default class PointFull extends Component {
           .removeEventListener(`click`, this._onSubmitButtonClick);
     this._element.querySelector(`button[type="reset"]`)
           .removeEventListener(`click`, this._onResetButtonClick);
+
+    const changeTime = this._element.querySelector(`.point__time .point__input`);
+    changeTime.removeEventListener(`click`, this._onChangeTime);
+
   }
 
   update(data) {
+    this._price = data.price;
+    this._time = data.time;
+    this._destination = data.destination;
     this._title = data.title;
+    this._type = data.type;
   }
 
   static createMapper(target) {
     return {
-      price: (value) => target.price = value,
+      'price': (value) => (target.price = value),
+      'destination': (value) => (target.destination = value),
+
     };
   }
 

@@ -17,6 +17,8 @@ export default class Point extends Component {
     this._price = data.price;
     this._time = data.time;
     this._offers = data.offers;
+    this._destination = data.destination;
+
 
     this._onEdit = null;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);

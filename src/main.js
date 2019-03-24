@@ -38,6 +38,7 @@ const renderPoints = (pointsData) => {
 
     fullPointComponent.onSubmit = (newObject) => {
       pointData.price = newObject.price;
+      pointData.destination = newObject.destination;
 
       pointComponent.update(pointData);
 
