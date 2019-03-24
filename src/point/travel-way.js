@@ -2,8 +2,7 @@ const getChecked = (defaultData, userData) =>
   (defaultData === userData) && `checked`;
 
 
-export const getTravelWay = (way) => {
-  return	`
+export const getTravelWay = (way) => `
   <div class="travel-way__select">
     <div class="travel-way__select-group">
       <input
@@ -86,4 +85,4 @@ export const getTravelWay = (way) => {
       class="travel-way__select-label"
       for="travel-way-sightseeing">🏛 sightseeing</label>
     </div>
-  </div>`};
+  </div>`;
