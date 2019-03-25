@@ -1,7 +1,6 @@
 const getChecked = (defaultData, userData) =>
   (defaultData === userData) && `checked`;
 
-
 export const getTravelWay = (way) => `
   <div class="travel-way__select">
     <div class="travel-way__select-group">

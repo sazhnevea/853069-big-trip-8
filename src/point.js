@@ -40,7 +40,7 @@ export default class Point extends Component {
   }
 
   _onEditButtonClick() {
-    return isFunction(this._onEdit) && this._onEdit();
+    isFunction(this._onEdit) && this._onEdit();
   }
 
   createListeners() {

@@ -1,4 +1,5 @@
-import {getTime, getRandomInteger} from './randomizes';
+import moment from 'moment';
+import {getRandomInteger} from './randomizes';
 import {
   getRandomDescription,
   getRandomOffers,
@@ -6,6 +7,14 @@ import {
   getRandomTitle,
   getRandomType,
 } from './data-point';
+
+const getTime = () => {
+  return {
+    start: moment(),
+    end: moment().add(getRandomInteger(1, 24), `hours`),
+  };
+};
+
 
 export const getPointData = () => ({
   title: getRandomTitle(),

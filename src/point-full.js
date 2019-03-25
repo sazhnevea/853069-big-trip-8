@@ -8,7 +8,7 @@ import {getTimeOpenedPoint,
   getImages,
   getPrice,
 } from './point/';
-import flatpickr from 'flatpickr';
+import flatpickr, {flatpickrConfig} from './libraries/flatpickr.js';
 
 export default class PointFull extends Component {
   constructor(data) {
@@ -25,9 +25,9 @@ export default class PointFull extends Component {
 
     this._onSubmit = null;
     this._onReset = null;
-    this._state.isTime = false;
-    this._state.isPrice = false;
-    this._state.isDestination = false;
+    this._state.isTimeClicked = false;
+    this._state.isPriceClicked = false;
+    this._state.isDestinationClicked = false;
 
     this._onChangePrice = this._onChangePrice.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
@@ -40,36 +40,36 @@ export default class PointFull extends Component {
   _processForm(formData) {
     const entry = {
       price: ``,
+      destination: ``,
+      time: ``,
+      type: ``,
     };
 
     const pointEditMapper = PointFull.createMapper(entry);
-
     for (const pair of formData.entries()) {
       const [property, value] = pair;
-      // eslint-disable-next-line no-unused-expressions
       pointEditMapper[property] && pointEditMapper[property](value);
     }
 
     return entry;
   }
 
-
   _onChangePrice() {
-    this._state.isPrice = !this._state.isPrice;
+    this._state.isPriceClicked = !this._state.isPriceClicked;
     this.removeListeners();
     this._partialUpdate();
     this.createListeners();
   }
 
   _onChangeTime() {
-    this._state.isTime = !this._state.isTime;
+    this._state.isTimeClicked = !this._state.isTimeClicked;
     this.removeListeners();
-    this._partialUpdate();
+    // this._partialUpdate();
     this.createListeners();
   }
 
   _onChangeDestination() {
-    this._state.isDestination = !this._state.isDestination;
+    this._state.isDestinationClicked = !this._state.isDestinationClicked;
     this.removeListeners();
     this._partialUpdate();
     this.createListeners();
@@ -153,14 +153,24 @@ export default class PointFull extends Component {
   createListeners() {
     const submitButton = this._element.querySelector(`.point__button--save`);
     const resetButton = this._element.querySelector(`button[type="reset"]`);
-    const changeTime = this._element.querySelector(`.point__time .point__input`);
+    const timeInput = this._element.querySelector(`.point__time .point__input`);
     submitButton.addEventListener(`click`, this._onSubmitButtonClick);
     resetButton.addEventListener(`click`, this._onResetButtonClick);
-    changeTime.addEventListener(`click`, this._onChangeTime);
+    timeInput.addEventListener(`click`, this._onChangeTime);
 
-    if (this._state.isTime) {
-      flatpickr(`.point__time .point__input`, {enableTime: true, noCalendar: true, altInput: true, altFormat: `h:i K`, dateFormat: `h:i K`});
+    if (this._state.isTimeClicked) {
+      flatpickr(`.point__time .point__input`, flatpickrConfig);
     }
+  }
+
+  removeListeners() {
+    const submitButton = this._element.querySelector(`.point__button--save`);
+    const resetButton = this._element.querySelector(`button[type="reset"]`);
+    const timeInput = this._element.querySelector(`.point__time .point__input`);
+
+    submitButton.removeEventListener(`click`, this._onSubmitButtonClick);
+    resetButton.removeEventListener(`click`, this._onResetButtonClick);
+    timeInput.removeEventListener(`click`, this._onChangeTime);
   }
 
   _onSubmitButtonClick(evt) {
@@ -168,29 +178,17 @@ export default class PointFull extends Component {
 
     const formData = new FormData(this._element.querySelector(`form`));
     const newData = this._processForm(formData);
-    // eslint-disable-next-line no-unused-expressions
     isFunction(this._onSubmit) && this._onSubmit(newData);
     this.update(newData);
   }
 
   _onResetButtonClick() {
-    return isFunction(this._onReset) && this._onReset();
-  }
-
-  removeListeners() {
-    this._element.querySelector(`.point__button--save`)
-          .removeEventListener(`click`, this._onSubmitButtonClick);
-    this._element.querySelector(`button[type="reset"]`)
-          .removeEventListener(`click`, this._onResetButtonClick);
-
-    const changeTime = this._element.querySelector(`.point__time .point__input`);
-    changeTime.removeEventListener(`click`, this._onChangeTime);
-
+    isFunction(this._onReset) && this._onReset();
   }
 
   update(data) {
     this._price = data.price;
-    this._time = data.time;
+    // this._time = data.time;
     this._destination = data.destination;
     this._title = data.title;
     this._type = data.type;
@@ -200,7 +198,8 @@ export default class PointFull extends Component {
     return {
       'price': (value) => (target.price = value),
       'destination': (value) => (target.destination = value),
-
+      'time': (value) => (target.time = value),
+      'type': (value) => (target.type = value),
     };
   }
 

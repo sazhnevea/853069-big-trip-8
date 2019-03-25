@@ -1,11 +1,14 @@
 import moment from 'moment';
 
 const formatTime = (date) => date.format(`HH:MM`);
+const formatDuration = (date) => `
+  ${date.format(`HH`)}H ${date.format(`MM`)}M`;
+
 
 export const getTimeClosedPoint = ({start, end}) => `
   <p class="trip-point__schedule">
     <span class="trip-point__timetable">${formatTime(start)}&nbsp;&mdash; ${formatTime(end)}</span>
-    <span class="trip-point__duration">${formatTime(moment(end.diff(start)))}</span>
+    <span class="trip-point__duration">${formatDuration(moment(end.diff(start)))}</span>
   </p>`;
 
 export const getTimeOpenedPoint = ({start, end}) => `
@@ -17,4 +20,3 @@ export const getTimeOpenedPoint = ({start, end}) => `
         name="time"
         placeholder="${formatTime(start)}&nbsp;&mdash; ${formatTime(end)}">
     </label>`;
-
