@@ -27,18 +27,19 @@ const renderPoints = (pointsData) => {
 
     const pointComponent = new Point(pointData);
     const fullPointComponent = new PointFull(pointData);
-
     pointsContainer.appendChild(pointComponent.render());
 
     pointComponent.onEdit = () => {
       fullPointComponent.render();
       pointsContainer.replaceChild(fullPointComponent.element, pointComponent.element);
       pointComponent.unrender();
+
     };
 
     fullPointComponent.onSubmit = (newObject) => {
       pointData.price = newObject.price;
       pointData.destination = newObject.destination;
+      pointData.type = newObject.type;
 
       pointComponent.update(pointData);
 

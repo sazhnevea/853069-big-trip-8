@@ -6,6 +6,7 @@ import {
   getRandomPicture,
   getRandomTitle,
   getRandomType,
+  getRandomDestination,
 } from './data-point';
 
 const getTime = () => {
@@ -27,4 +28,5 @@ export const getPointData = () => ({
     num: 3,
     price: {min: 10, max: 100},
   }),
+  destination: getRandomDestination()
 });

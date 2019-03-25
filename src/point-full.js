@@ -1,7 +1,7 @@
 import Component from './сomponent.js';
 import {isFunction} from './predicates.js';
-import {Icons} from './travel-types.js';
-import {getTimeOpenedPoint,
+import {
+  getTimeOpenedPoint,
   getTravelWay,
   getOffersFullPoint,
   getDescription,
@@ -42,7 +42,6 @@ export default class PointFull extends Component {
       price: ``,
       destination: ``,
       time: ``,
-      type: ``,
     };
 
     const pointEditMapper = PointFull.createMapper(entry);
@@ -97,17 +96,13 @@ export default class PointFull extends Component {
         <input class="point__input" type="text" placeholder="MAR 18" name="day">
       </label>
 
-      <div class="travel-way">
-        <label class="travel-way__label" for="travel-way__toggle">${Icons.get(this._type)}</label>
-        <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
-
+     
        ${getTravelWay(this._type)}
 
-      </div>
 
       <div class="point__destination-wrap">
         <label class="point__destination-label" for="destination">Flight to</label>
-        <input class="point__destination-input" list="destination-select" id="destination" value="Chamonix" name="destination">
+        <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination}" name="destination">
         <datalist id="destination-select">
           <option value="airport"></option>
           <option value="Geneva"></option>
@@ -188,10 +183,8 @@ export default class PointFull extends Component {
 
   update(data) {
     this._price = data.price;
-    // this._time = data.time;
     this._destination = data.destination;
     this._title = data.title;
-    this._type = data.type;
   }
 
   static createMapper(target) {
@@ -199,7 +192,7 @@ export default class PointFull extends Component {
       'price': (value) => (target.price = value),
       'destination': (value) => (target.destination = value),
       'time': (value) => (target.time = value),
-      'type': (value) => (target.type = value),
+      'travel-way': (value) => (target.type = value),
     };
   }
 

@@ -12,6 +12,13 @@ const titles = [
   `Check into a hotel`,
 ];
 
+const destinations = [
+  `Airport`,
+  `Geneva`,
+  `Chamonix`,
+  `Hotel`,
+];
+
 const types = [
   `Taxi`,
   `Bus`,
@@ -38,6 +45,7 @@ const descriptions = description.split(`. `);
 
 export const getRandomTitle = () => getRandomValue(titles);
 export const getRandomType = () => getRandomValue(types);
+export const getRandomDestination = () => getRandomValue(destinations);
 
 export const getRandomDescription = (num = 3) =>
   getRandomValues(descriptions, num).join(`. `);
