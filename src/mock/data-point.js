@@ -6,10 +6,10 @@ import {
 
 // https://up.htmlacademy.ru/ecmascript/8/check/tasks/853069/7
 const titles = [
-  `Taxi to Airport`,
-  `Flight to Geneva`,
-  `Drive to Chamonix`,
-  `Check into a hotel`,
+  `Airport`,
+  `Geneva`,
+  `Chamonix`,
+  `Hotel`,
 ];
 
 const destinations = [
@@ -19,17 +19,17 @@ const destinations = [
   `Hotel`,
 ];
 
-const types = [
-  `Taxi`,
-  `Bus`,
-  `Train`,
-  `Ship`,
-  `Transport`,
-  `Drive`,
-  `Flight`,
-  `Check-in`,
-  `Sightseeing`,
-  `Restaurant`,
+export const types = [
+  [`Taxi`, `🚕`, `to`],
+  [`Bus`, `🚌`, `to`],
+  [`Train`, `🚂`, `to`],
+  [`Ship`, `🛳️`, `to`],
+  [`Transport`, `🚊`, `to`],
+  [`Drive`, `🚗`, `to`],
+  [`Flight`, `✈️`, `to`],
+  [`Check-in`, `🏨`, `in`],
+  [`Sightseeing`, `🏛️`, `in`],
+  [`Restaurant`, `🍴`, `in`],
 ];
 
 const offers = [
@@ -43,8 +43,12 @@ const description = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cr
 
 const descriptions = description.split(`. `);
 
-export const getRandomTitle = () => getRandomValue(titles);
-export const getRandomType = () => getRandomValue(types);
+export const getRandomTitle = () => {
+  const index = getRandomInteger(0, types.length - 1);
+  return `${types[index][0]} ${types[index][2]} ${getRandomValue(titles)}`;
+};
+
+export const getRandomType = () => getRandomValue(types)[0];
 export const getRandomDestination = () => getRandomValue(destinations);
 
 export const getRandomDescription = (num = 3) =>
