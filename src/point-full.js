@@ -63,7 +63,7 @@ export default class PointFull extends Component {
   _onChangeTime() {
     this._state.isTimeClicked = !this._state.isTimeClicked;
     this.removeListeners();
-    // this._partialUpdate();
+    this._partialUpdate();
     this.createListeners();
   }
 
@@ -75,7 +75,10 @@ export default class PointFull extends Component {
   }
 
   _partialUpdate() {
-    this._element.innerHTML = this.template;
+    this.removeListeners();
+    const oldElement = this._element;
+    this.createListeners();
+    oldElement.parentNode.replaceChild(this._element, oldElement);
   }
 
   set onSubmit(fn) {
@@ -95,14 +98,12 @@ export default class PointFull extends Component {
         choose day
         <input class="point__input" type="text" placeholder="MAR 18" name="day">
       </label>
-
      
        ${getTravelWay(this._type)}
 
-
       <div class="point__destination-wrap">
-        <label class="point__destination-label" for="destination">Flight to</label>
-        <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination}" name="destination">
+        <label class="point__destination-label" for="destination">${this._title.split(` `, 2).join(` `)}</label>
+        <input class="point__destination-input" list="destination-select" id="destination" value="${this._title.split(` `)[2]}" name="destination">
         <datalist id="destination-select">
           <option value="airport"></option>
           <option value="Geneva"></option>

@@ -24,7 +24,7 @@ const renderFilters = (element) => {
 
 const renderPoints = (pointsData) => {
   pointsData.forEach((pointData) => {
-
+console.log(pointData)
     const pointComponent = new Point(pointData);
     const fullPointComponent = new PointFull(pointData);
     pointsContainer.appendChild(pointComponent.render());
