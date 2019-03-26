@@ -9,10 +9,10 @@ import {
   getRandomDestination,
 } from './data-point';
 
-const getTime = () => {
+const getTime = function () {
   return {
     start: moment(),
-    end: moment().add(getRandomInteger(1, 24), `hours`),
+    end: moment().add(getRandomInteger(1, 86400000), `milliseconds`),
   };
 };
 
