@@ -1,5 +1,5 @@
 import Component from './сomponent.js';
-import {isFunction} from './predicates.js';
+import isFunction from 'lodash/isFunction';
 
 import {
   getIcon,
