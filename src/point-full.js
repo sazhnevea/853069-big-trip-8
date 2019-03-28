@@ -8,7 +8,9 @@ import {
   getImages,
   getPrice,
 } from './point/';
-import flatpickr, {flatpickrConfig} from './libraries/flatpickr.js';
+import flatpickr from './libraries/flatpickr.js';
+import moment from 'moment';
+
 
 export default class PointFull extends Component {
   constructor(data) {
@@ -39,17 +41,26 @@ export default class PointFull extends Component {
 
   _processForm(formData) {
     const entry = {
+      title: ``,
       price: ``,
       destination: ``,
-      time: ``,
+      time: {
+        start: ``,
+        end: ``,
+      },
     };
 
     const pointEditMapper = PointFull.createMapper(entry);
+
     for (const pair of formData.entries()) {
       const [property, value] = pair;
       pointEditMapper[property] && pointEditMapper[property](value);
     }
-
+    if (entry.destination) {
+      const arr = this._title.split(` `, 2);
+      arr.push(entry.destination);
+      entry.title = arr.join(` `);
+    }
     return entry;
   }
 
@@ -149,24 +160,78 @@ export default class PointFull extends Component {
   createListeners() {
     const submitButton = this._element.querySelector(`.point__button--save`);
     const resetButton = this._element.querySelector(`button[type="reset"]`);
-    const timeInput = this._element.querySelector(`.point__time .point__input`);
+    const timeStart = this._element.querySelector(`.point__input[name='date-start']`);
+    const timeEnd = this._element.querySelector(`.point__input[name='date-end']`);
     submitButton.addEventListener(`click`, this._onSubmitButtonClick);
     resetButton.addEventListener(`click`, this._onResetButtonClick);
-    timeInput.addEventListener(`click`, this._onChangeTime);
 
-    if (this._state.isTimeClicked) {
-      flatpickr(`.point__time .point__input`, flatpickrConfig);
-    }
+    timeStart.addEventListener(`click`, () => {
+      this._onChangeTime();
+      if (this._state.isTimeClicked) {
+        flatpickr(timeStart, {
+          defaultDate: [moment(this._time.start).valueOf()],
+          enableTime: true,
+          noCalendar: true,
+          altInput: true,
+          altFormat: `h:i K`,
+          dateFormat: `H:i`,
+        });
+      }
+    });
+
+    timeEnd.addEventListener(`click`, () => {
+      this._onChangeTime();
+      if (this._state.isTimeClicked) {
+        flatpickr(timeEnd, {
+          defaultDate: [moment(this._time.end).valueOf()],
+          enableTime: true,
+          noCalendar: true,
+          altInput: true,
+          altFormat: `h:i K`,
+          dateFormat: `H:i`,
+        });
+      }
+    });
+
   }
 
   removeListeners() {
     const submitButton = this._element.querySelector(`.point__button--save`);
     const resetButton = this._element.querySelector(`button[type="reset"]`);
-    const timeInput = this._element.querySelector(`.point__time .point__input`);
+    const timeStart = this._element.querySelector(`.point__input[name='date-start']`);
+    const timeEnd = this._element.querySelector(`.point__input[name='date-end']`);
 
     submitButton.removeEventListener(`click`, this._onSubmitButtonClick);
     resetButton.removeEventListener(`click`, this._onResetButtonClick);
-    timeInput.removeEventListener(`click`, this._onChangeTime);
+
+    timeStart.addEventListener(`click`, () => {
+      this._onChangeTime();
+      if (this._state.isTimeClicked) {
+        flatpickr(timeStart, {
+          defaultDate: [moment(this._time.start).valueOf()],
+          enableTime: true,
+          noCalendar: true,
+          altInput: true,
+          altFormat: `h:i K`,
+          dateFormat: `H:i`,
+        });
+      }
+    });
+
+    timeEnd.addEventListener(`click`, () => {
+      this._onChangeTime();
+      if (this._state.isTimeClicked) {
+        flatpickr(timeEnd, {
+          defaultDate: [moment(this._time.end).valueOf()],
+          enableTime: true,
+          [`time_24hr`]: true,
+          noCalendar: true,
+          altInput: true,
+          altFormat: `h:i K`,
+          dateFormat: `H:i`,
+        });
+      }
+    });
   }
 
   _onSubmitButtonClick(evt) {
@@ -186,14 +251,17 @@ export default class PointFull extends Component {
     this._price = data.price;
     this._destination = data.destination;
     this._title = data.title;
+    this._time = data.time;
+    this._title = data.title;
   }
 
   static createMapper(target) {
     return {
       'price': (value) => (target.price = value),
       'destination': (value) => (target.destination = value),
-      'time': (value) => (target.time = value),
       'travel-way': (value) => (target.type = value),
+      'date-start': (value) => (target.time.start = value),
+      'date-end': (value) => (target.time.end = value),
     };
   }
 

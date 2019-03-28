@@ -57,5 +57,6 @@ export default class Point extends Component {
     this._price = data.price;
     this._destination = data.destination;
     this._title = data.title;
+    this._time = data.time;
   }
 }

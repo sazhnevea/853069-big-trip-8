@@ -24,7 +24,6 @@ const renderFilters = (element) => {
 
 const renderPoints = (pointsData) => {
   pointsData.forEach((pointData) => {
-console.log(pointData)
     const pointComponent = new Point(pointData);
     const fullPointComponent = new PointFull(pointData);
     pointsContainer.appendChild(pointComponent.render());
@@ -40,6 +39,8 @@ console.log(pointData)
       pointData.price = newObject.price;
       pointData.destination = newObject.destination;
       pointData.type = newObject.type;
+      pointData.time = newObject.time;
+      pointData.title = newObject.title;
 
       pointComponent.update(pointData);
 
