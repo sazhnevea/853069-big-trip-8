@@ -36,13 +36,8 @@ const renderPoints = (pointsData) => {
     };
 
     fullPointComponent.onSubmit = (newObject) => {
-      pointData.price = newObject.price;
-      pointData.destination = newObject.destination;
-      pointData.type = newObject.type;
-      pointData.time = newObject.time;
-      pointData.title = newObject.title;
 
-      pointComponent.update(pointData);
+      pointComponent.update(newObject);
 
       pointComponent.render();
       pointsContainer.replaceChild(pointComponent.element, fullPointComponent.element);

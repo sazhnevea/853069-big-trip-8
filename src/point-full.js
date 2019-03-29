@@ -54,6 +54,8 @@ export default class PointFull extends Component {
 
     for (const pair of formData.entries()) {
       const [property, value] = pair;
+      console.log(`свойство ` + property);
+      console.log(`значение ` + value);
       pointEditMapper[property] && pointEditMapper[property](value);
     }
     if (entry.destination) {
@@ -158,17 +160,17 @@ export default class PointFull extends Component {
   }
 
   createListeners() {
-    const submitButton = this._element.querySelector(`.point__button--save`);
-    const resetButton = this._element.querySelector(`button[type="reset"]`);
-    const timeStart = this._element.querySelector(`.point__input[name='date-start']`);
-    const timeEnd = this._element.querySelector(`.point__input[name='date-end']`);
-    submitButton.addEventListener(`click`, this._onSubmitButtonClick);
-    resetButton.addEventListener(`click`, this._onResetButtonClick);
+    this._element.querySelector(`.point__button--save`)
+      .addEventListener(`click`, this._onSubmitButtonClick);
+    this._element.querySelector(`button[type="reset"]`)
+      .addEventListener(`click`, this._onResetButtonClick);
 
-    timeStart.addEventListener(`click`, () => {
+    const timeStartInput = this._element.querySelector(`.point__input[name='date-start']`);
+    const timeEndInput = this._element.querySelector(`.point__input[name='date-end']`);
+    timeStartInput.addEventListener(`click`, () => {
       this._onChangeTime();
       if (this._state.isTimeClicked) {
-        flatpickr(timeStart, {
+        flatpickr(timeStartInput, {
           defaultDate: [moment(this._time.start).valueOf()],
           enableTime: true,
           noCalendar: true,
@@ -179,10 +181,10 @@ export default class PointFull extends Component {
       }
     });
 
-    timeEnd.addEventListener(`click`, () => {
+    timeEndInput.addEventListener(`click`, () => {
       this._onChangeTime();
       if (this._state.isTimeClicked) {
-        flatpickr(timeEnd, {
+        flatpickr(timeEndInput, {
           defaultDate: [moment(this._time.end).valueOf()],
           enableTime: true,
           noCalendar: true,
@@ -196,18 +198,20 @@ export default class PointFull extends Component {
   }
 
   removeListeners() {
-    const submitButton = this._element.querySelector(`.point__button--save`);
-    const resetButton = this._element.querySelector(`button[type="reset"]`);
-    const timeStart = this._element.querySelector(`.point__input[name='date-start']`);
-    const timeEnd = this._element.querySelector(`.point__input[name='date-end']`);
 
-    submitButton.removeEventListener(`click`, this._onSubmitButtonClick);
-    resetButton.removeEventListener(`click`, this._onResetButtonClick);
+    this._element.querySelector(`.point__button--save`)
+      .removeEventListener(`click`, this._onSubmitButtonClick);
+    this._element.querySelector(`button[type="reset"]`)
+      .removeEventListener(`click`, this._onResetButtonClick);
 
-    timeStart.addEventListener(`click`, () => {
+    const timeStartInput = this._element.querySelector(`.point__input[name='date-start']`);
+    const timeEndInput = this._element.querySelector(`.point__input[name='date-end']`);
+
+    timeStartInput.addEventListener(`click`, () => {
       this._onChangeTime();
+
       if (this._state.isTimeClicked) {
-        flatpickr(timeStart, {
+        flatpickr(timeStartInput, {
           defaultDate: [moment(this._time.start).valueOf()],
           enableTime: true,
           noCalendar: true,
@@ -218,10 +222,10 @@ export default class PointFull extends Component {
       }
     });
 
-    timeEnd.addEventListener(`click`, () => {
+    timeEndInput.addEventListener(`click`, () => {
       this._onChangeTime();
       if (this._state.isTimeClicked) {
-        flatpickr(timeEnd, {
+        flatpickr(timeEndInput, {
           defaultDate: [moment(this._time.end).valueOf()],
           enableTime: true,
           [`time_24hr`]: true,
