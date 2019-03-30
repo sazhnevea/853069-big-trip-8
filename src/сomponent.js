@@ -34,8 +34,7 @@ export default class Component {
     this._element = null;
   }
 
-  update(data) {
-    this.value = data.value;
+  update() {
   }
 
 }

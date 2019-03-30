@@ -68,23 +68,17 @@ export default class PointFull extends Component {
 
   _onChangePrice() {
     this._state.isPriceClicked = !this._state.isPriceClicked;
-    this.removeListeners();
     this._partialUpdate();
-    this.createListeners();
   }
 
   _onChangeTime() {
     this._state.isTimeClicked = !this._state.isTimeClicked;
-    this.removeListeners();
     this._partialUpdate();
-    this.createListeners();
   }
 
   _onChangeDestination() {
     this._state.isDestinationClicked = !this._state.isDestinationClicked;
-    this.removeListeners();
     this._partialUpdate();
-    this.createListeners();
   }
 
   _partialUpdate() {
