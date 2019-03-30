@@ -32,17 +32,20 @@ const renderPoints = (pointsData) => {
       fullPointComponent.render();
       pointsContainer.replaceChild(fullPointComponent.element, pointComponent.element);
       pointComponent.unrender();
-
     };
 
-    fullPointComponent.onSubmit = (newObject) => {
-
-      pointComponent.update(newObject);
-
+    fullPointComponent.onSubmit = (newData) => {
+      pointComponent.update(newData);
       pointComponent.render();
       pointsContainer.replaceChild(pointComponent.element, fullPointComponent.element);
       fullPointComponent.unrender();
     };
+
+    fullPointComponent.onDelete = (newData) => {
+      pointComponent.update(newData);
+      fullPointComponent.unrender();
+    };
+
   });
 };
 

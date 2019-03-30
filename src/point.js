@@ -18,6 +18,7 @@ export default class Point extends Component {
     this._time = data.time;
     this._offers = data.offers;
     this._destination = data.destination;
+    this._isDeleted = false;
 
 
     this._onEdit = null;
@@ -58,5 +59,6 @@ export default class Point extends Component {
     this._destination = data.destination;
     this._title = data.title;
     this._time = data.time;
+    this._isDeleted = data.isDeleted;
   }
 }
