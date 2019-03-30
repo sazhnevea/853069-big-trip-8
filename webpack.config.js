@@ -7,6 +7,14 @@ module.exports = {
     filename: `bundle.js`,
     path: path.join(__dirname, `public`)
   },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [`style-loader`, `css-loader`],
+      },
+    ],
+  },
   devtool: `source-map`, // подключаем sourcemaps
   devServer: {
     contentBase: path.join(__dirname, `public`), // где искать сборку

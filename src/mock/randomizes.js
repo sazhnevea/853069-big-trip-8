@@ -7,13 +7,3 @@ export const getRandomValue = (arr) =>
 export const getRandomValues = (arr, num = 1) =>
   Array.from({length: num}, () => getRandomValue(arr));
 
-export const getRandomDates = ({
-  start = new Date(),
-  hours = 2,
-  minutes = 20,
-} = {}) => {
-  const end = new Date();
-  end.setHours(start.getHours() + hours, start.getMinutes() + minutes);
-
-  return {start, end};
-};
