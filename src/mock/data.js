@@ -9,10 +9,10 @@ import {
   getRandomDestination,
 } from './data-point';
 
-const getTime = function () {
+const getDate = function () {
   return {
-    start: moment(),
-    end: moment().add(getRandomInteger(1, 86400000), `milliseconds`),
+    start: moment().valueOf(),
+    end: moment().add(getRandomInteger(2, 24), `hours`).valueOf(),
   };
 };
 
@@ -23,7 +23,7 @@ export const getPointData = () => ({
   picture: getRandomPicture(),
   description: getRandomDescription(3),
   price: getRandomInteger(10, 100),
-  time: getTime(),
+  time: getDate(),
   offers: getRandomOffers({
     num: 3,
     price: {min: 10, max: 100},

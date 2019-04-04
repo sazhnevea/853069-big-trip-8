@@ -1,31 +1,46 @@
 import Point from './point.js';
 import PointFull from './point-full.js';
-import {getFilter} from './filter';
+import Filter from './filter.js';
 import {getPointData} from './mock/data';
-
-const filterNames = [
-  `everything`,
-  `future`,
-  `past`,
-];
+import {filterNames} from './mock/filter-names';
 
 const filterContainer = document.querySelector(`.trip-filter`);
 const pointsContainer = document.querySelector(`.trip-day__items`);
 
-const generateFilters = () => filterNames.map(getFilter).join(``);
 
 const generatePointsData = (count = 7) => {
   return [...Array(count)].map(() => getPointData());
 };
 
-const renderFilters = (element) => {
-  filterContainer.innerHTML = element;
+const getFilteredPoints = (points, filter) => {
+  switch (filter) {
+    case `everything`:
+      return points;
+
+    case `future`:
+      return points.filter((point) => point.time.start > Date.now());
+
+    case `past`:
+      return points.filter((point) => point.time.start < Date.now());
+  }
+};
+
+const renderFilters = (names) => {
+  names.forEach((name) => {
+    const filterComponent = new Filter(name);
+    filterContainer.appendChild(filterComponent.render());
+
+    filterComponent.onFilter = () => {
+      filterComponent.checked = !filterComponent.checked;
+    };
+  });
 };
 
 const renderPoints = (pointsData) => {
   pointsData.forEach((pointData) => {
     const pointComponent = new Point(pointData);
     const fullPointComponent = new PointFull(pointData);
+
     pointsContainer.appendChild(pointComponent.render());
 
     pointComponent.onEdit = () => {
@@ -41,18 +56,21 @@ const renderPoints = (pointsData) => {
       fullPointComponent.unrender();
     };
 
-    fullPointComponent.onDelete = (newData) => {
-      pointComponent.update(newData);
+    fullPointComponent.onDelete = () => {
+      pointComponent.markAsDeleted();
       fullPointComponent.unrender();
     };
-
   });
 };
 
-filterContainer.addEventListener(`change`, () => {
+const pointsData = generatePointsData();
+
+filterContainer.addEventListener(`change`, ({target}) => {
+  const filteredPoints = getFilteredPoints(pointsData, target.value);
   pointsContainer.innerHTML = ``;
-  renderPoints(generatePointsData());
+  renderPoints(filteredPoints);
+
 });
 
-renderFilters(generateFilters());
-renderPoints(generatePointsData());
+renderFilters(filterNames);
+renderPoints(pointsData);

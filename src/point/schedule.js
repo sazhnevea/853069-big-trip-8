@@ -24,7 +24,7 @@ export const getTimeClosedPoint = ({start, end}) => {
   return `
   <p class="trip-point__schedule">
     <span class="trip-point__timetable">${formatTime(start)}&nbsp;&mdash; ${formatTime(end)}</span>
-    <span class="trip-point__duration">${formatDuration(end.diff(start))}</span>
+    <span class="trip-point__duration"></span>
   </p>`;
 };
 

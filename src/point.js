@@ -59,6 +59,9 @@ export default class Point extends Component {
     this._destination = data.destination;
     this._title = data.title;
     this._time = data.time;
-    this._isDeleted = data.isDeleted;
+  }
+
+  markAsDeleted() {
+    this._isDeleted = !this._isDeleted;
   }
 }
