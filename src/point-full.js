@@ -149,6 +149,7 @@ export default class PointFull extends Component {
     this._element.querySelector(`.point__button--save`)
       .addEventListener(`click`, this._onSubmitButtonClick);
     this._element.querySelector(`button[type="reset"]`)
+
       .addEventListener(`click`, this._onDeleteButtonClick);
 
     const getFlatpickrConfig = (value) => {

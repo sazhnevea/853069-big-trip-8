@@ -7,6 +7,7 @@ const formatTime = (time) => {
     time = getUnixFormat(time);
   }
   return moment(time).format(`LT`);
+
 };
 
 export const getTimeClosedPoint = ({start, end}) => {
@@ -21,6 +22,7 @@ export const getTimeClosedPoint = ({start, end}) => {
   <p class="trip-point__schedule">
     <span class="trip-point__timetable">${formatTime(start)}&nbsp;&mdash; ${formatTime(end)}</span>
     <span class="trip-point__duration"></span>
+
   </p>`;
 };
 

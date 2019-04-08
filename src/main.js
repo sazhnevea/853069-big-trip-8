@@ -43,7 +43,6 @@ const renderPoints = (pointsData) => {
   pointsData.forEach((pointData) => {
     const pointComponent = new Point(pointData);
     const fullPointComponent = new PointFull(pointData);
-
     pointsContainer.appendChild(pointComponent.render());
 
     pointComponent.onEdit = () => {
@@ -63,6 +62,11 @@ const renderPoints = (pointsData) => {
       pointComponent.markAsDeleted();
       fullPointComponent.unrender();
     };
+    fullPointComponent.onDelete = (newData) => {
+      pointComponent.update(newData);
+      fullPointComponent.unrender();
+    };
+
   });
 };
 
