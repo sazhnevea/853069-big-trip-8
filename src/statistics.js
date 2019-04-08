@@ -18,7 +18,7 @@ export default class Stats {
 
 
   render() {
-    this.setFilteredData(this._title);
+    this.setStatData(this._title);
     this._ctx.height = BAR_HEIGHT * this._statData.length;
     this._element = new Chart(this._ctx, this.configChart);
     return this._element;
@@ -28,10 +28,12 @@ export default class Stats {
     this._element = null;
   }
 
-  setFilteredData(title) {
+  setStatData(title) {
+    let filteredData = null;
     switch (title) {
       case `transport`:
-        return this.getTransportData();
+        filteredData = this.getTransportData();
+        return filteredData;
 
       case `money`:
         return this.getMoneyData();
@@ -39,6 +41,7 @@ export default class Stats {
       case `time spent`:
         return this.getTimeSpentData();
     }
+    return ``;
   }
 
   getTransportData() {

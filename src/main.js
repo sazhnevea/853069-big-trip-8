@@ -25,6 +25,7 @@ const getFilteredPoints = (points, filter) => {
     case `past`:
       return points.filter((point) => point.time.start < Date.now());
   }
+  return ``;
 };
 
 const renderFilters = (names) => {

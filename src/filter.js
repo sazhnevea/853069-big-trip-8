@@ -41,16 +41,4 @@ export default class Filter extends Component {
             <label class="trip-filter__item" for="filter-${this._name}">${this._name}</label>`;
   }
 
-  // switch (filter) {
-    //   case `everything`:
-    //     return points;
-
-    //   case `future`:
-    //     return points.filter((point) => Date.parse(point.time.start) < Date.now());
-
-    //   case `past`:
-    //     return points.filter((point) => Date.parse(point.time.start) > Date.now());
-    // }
-
-
 }

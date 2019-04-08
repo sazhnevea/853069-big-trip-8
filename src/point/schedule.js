@@ -9,10 +9,6 @@ const formatTime = (time) => {
   return moment(time).format(`LT`);
 };
 
-const formatDuration = (diff) => {
-  return `${moment.duration(diff).hours()}H ${moment.duration(diff).minutes()}M`;
-};
-
 export const getTimeClosedPoint = ({start, end}) => {
   if (typeof start === `string`) {
     start = getUnixFormat(start);
