@@ -70,25 +70,14 @@ export default class PointFull extends Component {
 
   _onChangePrice() {
     this._state.isPriceClicked = !this._state.isPriceClicked;
-    this._partialUpdate();
   }
 
   _onChangeTime() {
     this._state.isTimeClicked = !this._state.isTimeClicked;
-    this._partialUpdate();
   }
 
   _onChangeDestination() {
     this._state.isDestinationClicked = !this._state.isDestinationClicked;
-    this._partialUpdate();
-  }
-
-
-  _partialUpdate() {
-    this.removeListeners();
-    const oldElement = this._element;
-    this.createListeners();
-    oldElement.parentNode.replaceChild(this._element, oldElement);
   }
 
   set onSubmit(fn) {
@@ -160,7 +149,8 @@ export default class PointFull extends Component {
     this._element.querySelector(`.point__button--save`)
       .addEventListener(`click`, this._onSubmitButtonClick);
     this._element.querySelector(`button[type="reset"]`)
-      .addEventListener(`click`, this._onDelete);
+
+      .addEventListener(`click`, this._onDeleteButtonClick);
 
     const getFlatpickrConfig = (value) => {
       const config = {
@@ -201,6 +191,10 @@ export default class PointFull extends Component {
 
   _onDeleteButtonClick(evt) {
     evt.preventDefault();
+    isFunction(this._onDelete) && this._onDelete();
+  }
+
+  markAsDeleted() {
     this._isDeleted = !this._isDeleted;
   }
 
@@ -210,7 +204,6 @@ export default class PointFull extends Component {
     this._title = data.title;
     this._time = data.time;
     this._title = data.title;
-    this._isDeleted = data._isDeleted;
   }
 
   static createMapper(target) {
