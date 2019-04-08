@@ -1,10 +1,19 @@
-import {Icons, getIcon} from './icons';
-import {getOffers} from './offers';
-import {getSchedule} from './schedule';
+import {getIcon} from './icons';
+import {getOffersPoint, getOffersFullPoint} from './offers';
+import {getTimeClosedPoint, getTimeOpenedPoint} from './schedule';
+import {getTravelWay} from './travel-way';
+import {getDescription} from './description';
+import {getImages} from './images';
+import {getPrice} from './price';
 
 export {
-  Icons,
   getIcon,
-  getOffers,
-  getSchedule,
+  getOffersPoint,
+  getTimeClosedPoint,
+  getTimeOpenedPoint,
+  getTravelWay,
+  getOffersFullPoint,
+  getDescription,
+  getImages,
+  getPrice,
 };

@@ -1,8 +1,19 @@
 import Component from './сomponent.js';
-import {isFunction} from './predicates.js';
+import isFunction from 'lodash/isFunction';
 import {
-  Icons,
+  getTimeOpenedPoint,
+  getTravelWay,
+  getOffersFullPoint,
+  getDescription,
+  getImages,
+  getPrice,
 } from './point/';
+import flatpickr from './libraries/flatpickr.js';
+import moment from 'moment';
+
+const removeFlatpickr = (element) => {
+  element.flatpickr().destroy();
+};
 
 export default class PointFull extends Component {
   constructor(data) {
@@ -14,21 +25,67 @@ export default class PointFull extends Component {
     this._price = data.price;
     this._time = data.time;
     this._offers = data.offers;
+    this._destination = data.destination;
+
 
     this._onSubmit = null;
-    this._onReset = null;
-    this._state.isDate = false;
+    this._onDelete = null;
+    this._state.isTimeClicked = false;
+    this._state.isPriceClicked = false;
+    this._state.isDestinationClicked = false;
+    this._isDeleted = false;
+
+    this._onChangePrice = this._onChangePrice.bind(this);
+    this._onChangeTime = this._onChangeTime.bind(this);
+    this._onChangeDestination = this._onChangeDestination.bind(this);
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
-    this._onResetButtonClick = this._onResetButtonClick.bind(this);
+    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
+  }
+
+  _processForm(formData) {
+    const entry = {
+      title: ``,
+      price: ``,
+      destination: ``,
+      time: {
+        start: ``,
+        end: ``,
+      },
+    };
+
+    const pointEditMapper = PointFull.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+      pointEditMapper[property] && pointEditMapper[property](value);
+    }
+    if (entry.destination) {
+      const arr = this._title.split(` `, 2);
+      arr.push(entry.destination);
+      entry.title = arr.join(` `);
+    }
+    return entry;
+  }
+
+  _onChangePrice() {
+    this._state.isPriceClicked = !this._state.isPriceClicked;
+  }
+
+  _onChangeTime() {
+    this._state.isTimeClicked = !this._state.isTimeClicked;
+  }
+
+  _onChangeDestination() {
+    this._state.isDestinationClicked = !this._state.isDestinationClicked;
   }
 
   set onSubmit(fn) {
     this._onSubmit = fn;
   }
 
-  set onReset(fn) {
-    this._onReset = fn;
+  set onDelete(fn) {
+    this._onDelete = fn;
   }
 
   get template() {
@@ -40,40 +97,12 @@ export default class PointFull extends Component {
         choose day
         <input class="point__input" type="text" placeholder="MAR 18" name="day">
       </label>
-
-      <div class="travel-way">
-        <label class="travel-way__label" for="travel-way__toggle">${Icons.get(this._type)}</label>
-
-        <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
-
-        <div class="travel-way__select">
-          <div class="travel-way__select-group">
-            <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi" name="travel-way" value="taxi">
-            <label class="travel-way__select-label" for="travel-way-taxi">🚕 taxi</label>
-
-            <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus" name="travel-way" value="bus">
-            <label class="travel-way__select-label" for="travel-way-bus">🚌 bus</label>
-
-            <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train" name="travel-way" value="train">
-            <label class="travel-way__select-label" for="travel-way-train">🚂 train</label>
-
-            <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="train" checked>
-            <label class="travel-way__select-label" for="travel-way-flight">✈️ flight</label>
-          </div>
-
-          <div class="travel-way__select-group">
-            <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in">
-            <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
-
-            <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing">
-            <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
-          </div>
-        </div>
-      </div>
+     
+       ${getTravelWay(this._type)}
 
       <div class="point__destination-wrap">
-        <label class="point__destination-label" for="destination">Flight to</label>
-        <input class="point__destination-input" list="destination-select" id="destination" value="Chamonix" name="destination">
+        <label class="point__destination-label" for="destination">${this._title.split(` `, 2).join(` `)}</label>
+        <input class="point__destination-input" list="destination-select" id="destination" value="${this._title.split(` `)[2]}" name="destination">
         <datalist id="destination-select">
           <option value="airport"></option>
           <option value="Geneva"></option>
@@ -82,16 +111,9 @@ export default class PointFull extends Component {
         </datalist>
       </div>
 
-      <label class="point__time">
-        choose time
-        <input class="point__input" type="text" value="00:00 — 00:00" name="time" placeholder="00:00 — 00:00">
-      </label>
+      ${getTimeOpenedPoint(this._time)}
 
-      <label class="point__price">
-        write price
-        <span class="point__price-currency">€</span>
-        <input class="point__input" type="text" value="160" name="price">
-      </label>
+      ${getPrice(this._price)}
 
       <div class="point__buttons">
         <button class="point__button point__button--save" type="submit">Save</button>
@@ -105,42 +127,16 @@ export default class PointFull extends Component {
     </header>
 
     <section class="point__details">
-      <section class="point__offers">
-        <h3 class="point__details-title">offers</h3>
+    
+      ${getOffersFullPoint(this._offers)}
 
-        <div class="point__offers-wrap">
-          <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage">
-          <label for="add-luggage" class="point__offers-label">
-            <span class="point__offer-service">Add luggage</span> + €<span class="point__offer-price">30</span>
-          </label>
-
-          <input class="point__offers-input visually-hidden" type="checkbox" id="switch-to-comfort-class" name="offer" value="switch-to-comfort-class">
-          <label for="switch-to-comfort-class" class="point__offers-label">
-            <span class="point__offer-service">Switch to comfort class</span> + €<span class="point__offer-price">100</span>
-          </label>
-
-          <input class="point__offers-input visually-hidden" type="checkbox" id="add-meal" name="offer" value="add-meal">
-          <label for="add-meal" class="point__offers-label">
-            <span class="point__offer-service">Add meal </span> + €<span class="point__offer-price">15</span>
-          </label>
-
-          <input class="point__offers-input visually-hidden" type="checkbox" id="choose-seats" name="offer" value="choose-seats">
-          <label for="choose-seats" class="point__offers-label">
-            <span class="point__offer-service">Choose seats</span> + €<span class="point__offer-price">5</span>
-          </label>
-        </div>
-
-      </section>
       <section class="point__destination">
         <h3 class="point__details-title">Destination</h3>
-        <p class="point__destination-text">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
-        <div class="point__destination-images">
-          <img src="http://picsum.photos/330/140?r=123" alt="picture from place" class="point__destination-image">
-          <img src="http://picsum.photos/300/200?r=1234" alt="picture from place" class="point__destination-image">
-          <img src="http://picsum.photos/300/100?r=12345" alt="picture from place" class="point__destination-image">
-          <img src="http://picsum.photos/200/300?r=123456" alt="picture from place" class="point__destination-image">
-          <img src="http://picsum.photos/100/300?r=1234567" alt="picture from place" class="point__destination-image">
-        </div>
+        
+        ${getDescription(this._description)}
+
+        ${getImages(this._picture)}
+
       </section>
       <input type="hidden" class="point__total-price" name="total-price" value="">
     </section>
@@ -149,33 +145,74 @@ export default class PointFull extends Component {
 `.trim();
   }
 
-  bind() {
-    const submitButton = this._element.querySelector(`.point__button--save`);
-    const resetButton = this._element.querySelector(`button[type="reset"]`);
-    submitButton.addEventListener(`click`, this._onSubmitButtonClick);
-    resetButton.addEventListener(`click`, this._onResetButtonClick);
+  createListeners() {
+    this._element.querySelector(`.point__button--save`)
+      .addEventListener(`click`, this._onSubmitButtonClick);
+    this._element.querySelector(`button[type="reset"]`)
+      .addEventListener(`click`, this._onDeleteButtonClick);
+
+    const getFlatpickrConfig = (value) => {
+      const config = {
+        defaultDate: [moment(value).valueOf()],
+        enableTime: true,
+        [`time_24hr`]: true,
+        noCalendar: true,
+        altInput: true,
+        altFormat: `h:i K`,
+        dateFormat: `h:i K`,
+      };
+      return config;
+    };
+
+    flatpickr(this._element.querySelector(`.point__input[name='date-start']`), getFlatpickrConfig(this._time.start));
+    flatpickr(this._element.querySelector(`.point__input[name='date-end']`), getFlatpickrConfig(this._time.end));
+
   }
 
-  unrender() {
-    this.unbind();
-    this._element.remove();
-    this._element = null;
+  removeListeners() {
+    this._element.querySelector(`.point__button--save`)
+      .removeEventListener(`click`, this._onSubmitButtonClick);
+    this._element.querySelector(`button[type="reset"]`)
+      .removeEventListener(`click`, this._onDeleteButtonClick);
+
+    removeFlatpickr(this._element.querySelector(`.point__input[name='date-start']`));
+    removeFlatpickr(this._element.querySelector(`.point__input[name='date-end']`));
   }
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-    return isFunction(this._onSubmit) ? this._onSubmit() : null;
+
+    const formData = new FormData(this._element.querySelector(`form`));
+    const newData = this._processForm(formData);
+    isFunction(this._onSubmit) && this._onSubmit(newData);
+    this.update(newData);
   }
 
-  _onResetButtonClick() {
-    return isFunction(this._onReset) ? this._onReset() : null;
+  _onDeleteButtonClick(evt) {
+    evt.preventDefault();
+    isFunction(this._onDelete) && this._onDelete();
   }
 
-  unbind() {
-    this._element.querySelector(`.point__button--save`)
-          .removeEventListener(`click`, this._onSubmitButtonClick);
-    this._element.querySelector(`button[type="reset"]`)
-          .removeEventListener(`click`, this._onResetButtonClick);
+  markAsDeleted() {
+    this._isDeleted = !this._isDeleted;
+  }
+
+  update(data) {
+    this._price = data.price;
+    this._destination = data.destination;
+    this._title = data.title;
+    this._time = data.time;
+    this._title = data.title;
+  }
+
+  static createMapper(target) {
+    return {
+      'price': (value) => (target.price = value),
+      'destination': (value) => (target.destination = value),
+      'travel-way': (value) => (target.type = value),
+      'date-start': (value) => (target.time.start = value),
+      'date-end': (value) => (target.time.end = value),
+    };
   }
 
 }
