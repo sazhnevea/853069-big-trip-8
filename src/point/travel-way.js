@@ -1,16 +1,10 @@
+import {Icons, TravelTypes} from '../travel-types.js';
 import {types} from '../mock/data-point.js';
-
 const getChecked = (defaultData, userData) =>
   (defaultData === userData) && `checked`;
 
 const getIcon = (value) => {
-  let icon = ``;
-  types.forEach((type) => {
-    if (type[0] === value) {
-      icon = type[1];
-    }
-  });
-  return icon;
+  return Icons.get(value);
 };
 
 export const getTravelWay = (way) => `
@@ -32,7 +26,7 @@ export const getTravelWay = (way) => `
          <label
          class="travel-way__select-label"
           for="travel-way-${item[0]}">${item[1]} ${item[0]}</label>
-         `)};
+         `)}
       </div>
     </div>
   </div>`;

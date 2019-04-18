@@ -1,26 +1,19 @@
 import moment from 'moment';
 
-const getUnixFormat = (value) => moment(value, `LT`);
+const getDuration = (from, to) => {
+  const durarion = moment.duration(moment(to).diff(moment(from)));
+  return `${durarion.hours()}H ${durarion.minutes()}M`;
+};
 
 const formatTime = (time) => {
-  if (typeof time === `string`) {
-    time = getUnixFormat(time);
-  }
   return moment(time).format(`LT`);
 };
 
 export const getTimeClosedPoint = ({start, end}) => {
-  if (typeof start === `string`) {
-    start = getUnixFormat(start);
-  }
-
-  if (typeof end === `string`) {
-    end = getUnixFormat(end);
-  }
   return `
   <p class="trip-point__schedule">
     <span class="trip-point__timetable">${formatTime(start)}&nbsp;&mdash; ${formatTime(end)}</span>
-    <span class="trip-point__duration"></span>
+    <span class="trip-point__duration">${getDuration(start, end)}</span>
   </p>`;
 };
 

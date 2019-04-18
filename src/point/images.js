@@ -1,4 +1,5 @@
-export const getImages = (image) => `
+export const getImages = (images) => `
    <div class="point__destination-images">
-     <img src="${image}" alt="picture from place" class="point__destination-image">
+   ${images.map(({description, src}) =>
+    `<img src="${src}" alt="${description}" class="point__destination-image">`)}
    </div>`;

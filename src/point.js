@@ -1,6 +1,6 @@
 import Component from './сomponent.js';
 import isFunction from 'lodash/isFunction';
-
+import {TravelTypes} from './travel-types.js';
 import {
   getIcon,
   getOffersPoint,
@@ -10,14 +10,13 @@ import {
 export default class Point extends Component {
   constructor(data) {
     super();
-    this._title = data.title;
+    this._destination = data.destination;
     this._type = data.type;
     this._picture = data.picture;
     this._description = data.description;
     this._price = data.price;
     this._time = data.time;
     this._offers = data.offers;
-    this._destination = data.destination;
     this._isDeleted = false;
 
 
@@ -33,7 +32,7 @@ export default class Point extends Component {
     return `
     <article class="trip-point">
       ${getIcon(this._type)}
-      <h3 class="trip-point__title">${this._title}</h3>
+      <h3 class="trip-point__title">${TravelTypes.get(this._type) + ` ` + this._destination}</h3>
       ${getTimeClosedPoint(this._time)}
       <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
       ${this._offers.length > 0 ? getOffersPoint(this._offers) : ``}
@@ -57,8 +56,10 @@ export default class Point extends Component {
   update(data) {
     this._price = data.price;
     this._destination = data.destination;
-    this._title = data.title;
     this._time = data.time;
+    this._type = data.type;
+    this._offers = data.offers;
+    this._isDeleted = false;
   }
 
   markAsDeleted() {

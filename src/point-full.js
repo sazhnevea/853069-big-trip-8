@@ -1,5 +1,6 @@
 import Component from './сomponent.js';
 import isFunction from 'lodash/isFunction';
+import {TravelTypes} from './travel-types.js';
 import {
   getTimeOpenedPoint,
   getTravelWay,
@@ -7,9 +8,12 @@ import {
   getDescription,
   getImages,
   getPrice,
+  getDestinations,
 } from './point/';
 import flatpickr from './libraries/flatpickr.js';
 import moment from 'moment';
+import {API} from './api.js';
+
 
 const removeFlatpickr = (element) => {
   element.flatpickr().destroy();
@@ -18,18 +22,19 @@ const removeFlatpickr = (element) => {
 export default class PointFull extends Component {
   constructor(data) {
     super();
-    this._title = data.title;
+    this._destination = data.destination;
     this._type = data.type;
-    this._picture = data.picture;
+    this._pictures = data.picture;
     this._description = data.description;
     this._price = data.price;
     this._time = data.time;
     this._offers = data.offers;
-    this._destination = data.destination;
-
+    this._id = data.id;
+    this._isFaforite = data.isFavorite;
+    this._onDelete = false;
 
     this._onSubmit = null;
-    this._onDelete = null;
+    this._onTravelType = null;
     this._state.isTimeClicked = false;
     this._state.isPriceClicked = false;
     this._state.isDestinationClicked = false;
@@ -41,11 +46,12 @@ export default class PointFull extends Component {
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
+    this._onTravelWayClick = this._onTravelWayClick.bind(this);
+
   }
 
   _processForm(formData) {
     const entry = {
-      title: ``,
       price: ``,
       destination: ``,
       time: {
@@ -60,13 +66,24 @@ export default class PointFull extends Component {
       const [property, value] = pair;
       pointEditMapper[property] && pointEditMapper[property](value);
     }
-    if (entry.destination) {
-      const arr = this._title.split(` `, 2);
-      arr.push(entry.destination);
-      entry.title = arr.join(` `);
-    }
+    // if (entry.destination) {
+    //   const arr = this._destination.split(` `, 2);
+    //   arr.push(entry.destination);
+    //   entry.destination = arr.join(` `);
+    // }
     return entry;
   }
+
+  static createMapper(target) {
+    return {
+      'price': (value) => (target.price = value),
+      'destination': (value) => (target.destination = value),
+      'travel-way': (value) => (target.type = value),
+      'date-start': (value) => (target.time.start = moment(value, `LT`).valueOf()),
+      'date-end': (value) => (target.time.end = moment(value, `LT`).valueOf()),
+    };
+  }
+
 
   _onChangePrice() {
     this._state.isPriceClicked = !this._state.isPriceClicked;
@@ -88,6 +105,11 @@ export default class PointFull extends Component {
     this._onDelete = fn;
   }
 
+  set onTravelType(fn) {
+    this._onTravelType = fn;
+  }
+
+
   get template() {
     return `
    <article class="point">
@@ -101,14 +123,12 @@ export default class PointFull extends Component {
        ${getTravelWay(this._type)}
 
       <div class="point__destination-wrap">
-        <label class="point__destination-label" for="destination">${this._title.split(` `, 2).join(` `)}</label>
-        <input class="point__destination-input" list="destination-select" id="destination" value="${this._title.split(` `)[2]}" name="destination">
-        <datalist id="destination-select">
-          <option value="airport"></option>
-          <option value="Geneva"></option>
-          <option value="Chamonix"></option>
-          <option value="hotel"></option>
-        </datalist>
+        <label class="point__destination-label" for="destination">${TravelTypes.get(this._type)}</label>
+        <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination}" name="destination">
+       
+             
+
+       
       </div>
 
       ${getTimeOpenedPoint(this._time)}
@@ -135,7 +155,7 @@ export default class PointFull extends Component {
         
         ${getDescription(this._description)}
 
-        ${getImages(this._picture)}
+        ${getImages(this._pictures)}
 
       </section>
       <input type="hidden" class="point__total-price" name="total-price" value="">
@@ -150,12 +170,13 @@ export default class PointFull extends Component {
       .addEventListener(`click`, this._onSubmitButtonClick);
     this._element.querySelector(`button[type="reset"]`)
       .addEventListener(`click`, this._onDeleteButtonClick);
+    this._element.querySelector(`.travel-way__select-group`)
+      .addEventListener(`click`, this._onTravelWayClick);
 
     const getFlatpickrConfig = (value) => {
       const config = {
         defaultDate: [moment(value).valueOf()],
         enableTime: true,
-        [`time_24hr`]: true,
         noCalendar: true,
         altInput: true,
         altFormat: `h:i K`,
@@ -190,7 +211,28 @@ export default class PointFull extends Component {
 
   _onDeleteButtonClick(evt) {
     evt.preventDefault();
-    isFunction(this._onDelete) && this._onDelete();
+    isFunction(this._onDelete) && this._onDelete({id: this._id});
+  }
+
+  _onTravelWayClick(evt) {
+    evt.preventDefault();
+    if (evt.target.tagName === `LABEL`) {
+      const typeTaken = evt.target.textContent.split(` `)[1].toLowerCase();
+      const api = new API({endPoint: `https://es8-demo-srv.appspot.com/big-trip`, authorization: `Basic eo0w590io258587`});
+      api.getOffers().then((values) => this.changeOffers(values, typeTaken));
+    }
+    // isFunction(this._onTravelType) && this._onTravelType();
+    const test = this._element.querySelector(`.point__offers-wrap`);
+    test.innerHTML = ``;
+    test.innerHTML = getOffersFullPoint(this._offers) && getOffersFullPoint(this._offers);
+  }
+
+  changeOffers(offers, type) {
+    offers.forEach((offer) => {
+      if (offer.type === type) {
+        this._offers = offer.offers;
+      }
+    });
   }
 
   markAsDeleted() {
@@ -200,19 +242,8 @@ export default class PointFull extends Component {
   update(data) {
     this._price = data.price;
     this._destination = data.destination;
-    this._title = data.title;
     this._time = data.time;
-    this._title = data.title;
   }
 
-  static createMapper(target) {
-    return {
-      'price': (value) => (target.price = value),
-      'destination': (value) => (target.destination = value),
-      'travel-way': (value) => (target.type = value),
-      'date-start': (value) => (target.time.start = value),
-      'date-end': (value) => (target.time.end = value),
-    };
-  }
 
 }

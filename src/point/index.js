@@ -5,6 +5,8 @@ import {getTravelWay} from './travel-way';
 import {getDescription} from './description';
 import {getImages} from './images';
 import {getPrice} from './price';
+import {getDestinations} from './destinations';
+
 
 export {
   getIcon,
@@ -16,4 +18,5 @@ export {
   getDescription,
   getImages,
   getPrice,
+  getDestinations,
 };
