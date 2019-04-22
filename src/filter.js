@@ -33,7 +33,9 @@ export default class Filter extends Component {
   }
 
   _onFilterClick() {
-    isFunction(this._onFilter) && this._onFilter();
+    if (isFunction(this._onFilter)) {
+      this._onFilter();
+    }
   }
 
   get template() {
