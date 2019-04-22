@@ -4,7 +4,6 @@ import {
   getRandomValues,
 } from './randomizes';
 
-// https://up.htmlacademy.ru/ecmascript/8/check/tasks/853069/7
 const titles = [
   `Airport`,
   `Geneva`,

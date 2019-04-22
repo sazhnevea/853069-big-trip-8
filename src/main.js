@@ -2,28 +2,19 @@ import Point from './point.js';
 import PointFull from './point-full.js';
 import Stats from './statistics.js';
 import Filter from './filter.js';
-
-import {getPointData} from './mock/data';
 import {filterNames} from './mock/filter-names';
+import {API} from './api.js';
+
+const api = new API({endPoint: `https://es8-demo-srv.appspot.com/big-trip`, authorization: `Basic eo0w590io168444`});
 
 const filterContainer = document.querySelector(`.trip-filter`);
 const pointsContainer = document.querySelector(`.trip-day__items`);
 
-
-const generatePointsData = (count = 7) => {
-  return [...Array(count)].map(() => getPointData());
-};
-
 const getFilteredPoints = (points, filter) => {
   switch (filter) {
-    case `everything`:
-      return points;
-
-    case `future`:
-      return points.filter((point) => point.time.start > Date.now());
-
-    case `past`:
-      return points.filter((point) => point.time.start < Date.now());
+    case `everything`: return points;
+    case `future`: return points.filter((point) => point.time.start > Date.now());
+    case `past`: return points.filter((point) => point.time.start < Date.now());
   }
   return ``;
 };
@@ -52,25 +43,47 @@ const renderPoints = (pointsData) => {
     };
 
     fullPointComponent.onSubmit = (newData) => {
-      pointComponent.update(newData);
-      pointComponent.render();
-      pointsContainer.replaceChild(pointComponent.element, fullPointComponent.element);
-      fullPointComponent.unrender();
+      fullPointComponent.removeWarning();
+      fullPointComponent.lockButtons();
+      fullPointComponent.savingButtonMode();
+      pointData.destination = newData.destination;
+      pointData.price = newData.price;
+      pointData.time = newData.time;
+      pointData.offers = newData.offers;
+
+      api.updatePoint({id: pointData.id, data: pointData.toRAW()})
+        .then((newPoint) => {
+          pointComponent.update(newPoint);
+          pointComponent.render();
+          pointsContainer.replaceChild(pointComponent.element, fullPointComponent.element);
+          fullPointComponent.unrender();
+        })
+        .catch((err) => {
+          fullPointComponent.getWarning();
+          fullPointComponent.unlockButtons();
+          fullPointComponent.saveButtonMode();
+          throw err;
+        });
     };
 
-    fullPointComponent.onDelete = () => {
-      pointComponent.markAsDeleted();
-      fullPointComponent.unrender();
+    fullPointComponent.onDelete = ({id}) => {
+      fullPointComponent.removeWarning();
+      fullPointComponent.lockButtons();
+      fullPointComponent.deletingButtonMode();
+      api.deletePoint({id})
+        .then(() => api.getPoints())
+        .then(() => {
+          fullPointComponent.unrender();
+        })
+        .catch((err) => {
+          fullPointComponent.getWarning();
+          fullPointComponent.unlockButtons();
+          fullPointComponent.deleteButtonMode();
+          throw err;
+        });
     };
-    fullPointComponent.onDelete = (newData) => {
-      pointComponent.update(newData);
-      fullPointComponent.unrender();
-    };
-
   });
 };
-
-const pointsData = generatePointsData();
 
 filterContainer.addEventListener(`change`, ({target}) => {
   const filteredPoints = getFilteredPoints(pointsData, target.value);
@@ -80,34 +93,37 @@ filterContainer.addEventListener(`change`, ({target}) => {
 });
 
 renderFilters(filterNames);
-renderPoints(pointsData);
+api.getPoints()
+  .then((points) => {
+    renderPoints(points);
+  });
 
 const mainContainer = document.getElementById(`table`);
 const statsContainer = document.getElementById(`stats`);
 const tableButton = document.querySelector(`.view-switch a:nth-child(1)`);
 const statsButton = document.querySelector(`.view-switch a:nth-child(2)`);
 
-statsButton.addEventListener(`click`, (evt) => {
-  evt.preventDefault();
-  mainContainer.classList.add(`visually-hidden`);
-  statsContainer.classList.remove(`visually-hidden`);
-});
+// statsButton.addEventListener(`click`, (evt) => {
+//   evt.preventDefault();
+//   mainContainer.classList.add(`visually-hidden`);
+//   statsContainer.classList.remove(`visually-hidden`);
+// });
 
-tableButton.addEventListener(`click`, (evt) => {
-  evt.preventDefault();
-  mainContainer.classList.remove(`visually-hidden`);
-  statsContainer.classList.add(`visually-hidden`);
-});
+// tableButton.addEventListener(`click`, (evt) => {
+//   evt.preventDefault();
+//   mainContainer.classList.remove(`visually-hidden`);
+//   statsContainer.classList.add(`visually-hidden`);
+// });
 
 // const moneyCtx = document.querySelector(`.statistic__money`);
-const transportCtx = document.querySelector(`.statistic__transport`);
+// const transportCtx = document.querySelector(`.statistic__transport`);
 // const timeSpentCtx = document.querySelector(`.statistic__time-spend`);
 
 // const money = new Stats(moneyCtx, pointsData, `money`);
 // money.render();
 
-const transport = new Stats(transportCtx, pointsData, `transport`);
-transport.render();
+// const transport = new Stats(transportCtx, pointsData, `transport`);
+// transport.render();
 
 // const timeSpent = new Stats(timeSpentCtx, pointsData, `time spent`);
 // timeSpent.render();

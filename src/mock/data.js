@@ -13,6 +13,7 @@ const getDate = function () {
   return {
     start: moment().valueOf(),
     end: moment().add(getRandomInteger(2, 24), `hours`).valueOf(),
+  };
 };
 
 
