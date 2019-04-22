@@ -5,19 +5,19 @@ import Filter from './filter.js';
 import {filterNames} from './mock/filter-names';
 import {API} from './api.js';
 
-const api = new API({endPoint: `https://es8-demo-srv.appspot.com/big-trip`, authorization: `Basic eo0w590io168444`});
+const api = new API({endPoint: `https://es8-demo-srv.appspot.com/big-trip`, authorization: `Basic eo0w590io166444`});
 
 const filterContainer = document.querySelector(`.trip-filter`);
 const pointsContainer = document.querySelector(`.trip-day__items`);
 
-const getFilteredPoints = (points, filter) => {
-  switch (filter) {
-    case `everything`: return points;
-    case `future`: return points.filter((point) => point.time.start > Date.now());
-    case `past`: return points.filter((point) => point.time.start < Date.now());
-  }
-  return ``;
-};
+// const getFilteredPoints = (points, filter) => {
+//   switch (filter) {
+//     case `everything`: return points;
+//     case `future`: return points.filter((point) => point.time.start > Date.now());
+//     case `past`: return points.filter((point) => point.time.start < Date.now());
+//   }
+//   return ``;
+// };
 
 const renderFilters = (names) => {
   names.forEach((name) => {
@@ -34,6 +34,7 @@ const renderPoints = (pointsData) => {
   pointsData.forEach((pointData) => {
     const pointComponent = new Point(pointData);
     const fullPointComponent = new PointFull(pointData);
+
     pointsContainer.appendChild(pointComponent.render());
 
     pointComponent.onEdit = () => {
