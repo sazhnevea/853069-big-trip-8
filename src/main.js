@@ -10,14 +10,17 @@ const api = new API({endPoint: `https://es8-demo-srv.appspot.com/big-trip`, auth
 const filterContainer = document.querySelector(`.trip-filter`);
 const pointsContainer = document.querySelector(`.trip-day__items`);
 
-const getFilteredPoints = (points, filter) => {
-  switch (filter) {
-    case `everything`: return points;
-    case `future`: return points.filter((point) => point.time.start > Date.now());
-    case `past`: return points.filter((point) => point.time.start < Date.now());
-  }
-  return ``;
-};
+
+// const getFilteredPoints = (points, filter) => {
+//   switch (filter) {
+//     case `everything`: return points;
+//     case `future`: return points.filter((point) => point.time.start > Date.now());
+//     case `past`: return points.filter((point) => point.time.start < Date.now());
+//   }
+//   return ``;
+// };
+
+
 
 const renderFilters = (names) => {
   names.forEach((name) => {
