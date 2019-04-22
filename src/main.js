@@ -1,6 +1,6 @@
 import Point from './point.js';
 import PointFull from './point-full.js';
-import Stats from './statistics.js';
+// import Stats from './statistics.js';
 import Filter from './filter.js';
 import {filterNames} from './mock/filter-names';
 import {API} from './api.js';
@@ -10,14 +10,17 @@ const api = new API({endPoint: `https://es8-demo-srv.appspot.com/big-trip`, auth
 const filterContainer = document.querySelector(`.trip-filter`);
 const pointsContainer = document.querySelector(`.trip-day__items`);
 
-const getFilteredPoints = (points, filter) => {
-  switch (filter) {
-    case `everything`: return points;
-    case `future`: return points.filter((point) => point.time.start > Date.now());
-    case `past`: return points.filter((point) => point.time.start < Date.now());
-  }
-  return ``;
-};
+
+// const getFilteredPoints = (points, filter) => {
+//   switch (filter) {
+//     case `everything`: return points;
+//     case `future`: return points.filter((point) => point.time.start > Date.now());
+//     case `past`: return points.filter((point) => point.time.start < Date.now());
+//   }
+//   return ``;
+// };
+
+
 
 const renderFilters = (names) => {
   names.forEach((name) => {
@@ -86,12 +89,11 @@ const renderPoints = (pointsData) => {
   });
 };
 
-filterContainer.addEventListener(`change`, ({target}) => {
-  const filteredPoints = getFilteredPoints(pointsData, target.value);
-  pointsContainer.innerHTML = ``;
-  renderPoints(filteredPoints);
-
-});
+// filterContainer.addEventListener(`change`, ({target}) => {
+//   const filteredPoints = getFilteredPoints(pointsData, target.value);
+//   pointsContainer.innerHTML = ``;
+//   renderPoints(filteredPoints);
+// });
 
 renderFilters(filterNames);
 api.getPoints()
@@ -99,10 +101,10 @@ api.getPoints()
     renderPoints(points);
   });
 
-const mainContainer = document.getElementById(`table`);
-const statsContainer = document.getElementById(`stats`);
-const tableButton = document.querySelector(`.view-switch a:nth-child(1)`);
-const statsButton = document.querySelector(`.view-switch a:nth-child(2)`);
+// const mainContainer = document.getElementById(`table`);
+// const statsContainer = document.getElementById(`stats`);
+// const tableButton = document.querySelector(`.view-switch a:nth-child(1)`);
+// const statsButton = document.querySelector(`.view-switch a:nth-child(2)`);
 
 // statsButton.addEventListener(`click`, (evt) => {
 //   evt.preventDefault();

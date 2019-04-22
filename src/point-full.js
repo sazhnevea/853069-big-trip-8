@@ -205,14 +205,18 @@ export default class PointFull extends Component {
     evt.preventDefault();
     const formData = new FormData(this._element.querySelector(`form`));
     const newData = this._processForm(formData);
-    isFunction(this._onSubmit) && this._onSubmit(newData);
+    if (isFunction(this._onSubmit)) {
+      this._onSubmit(newData);
+    }
     this.update(newData);
 
   }
 
   _onDeleteButtonClick(evt) {
     evt.preventDefault();
-    isFunction(this._onDelete) && this._onDelete({id: this._id});
+    if (isFunction(this._onDelete)) {
+      this._onDelete({id: this._id});
+    }
   }
 
   _onTravelTypeClick(evt) {
