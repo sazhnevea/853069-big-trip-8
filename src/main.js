@@ -5,10 +5,11 @@ import Filter from './filter.js';
 import {filterNames} from './mock/filter-names';
 import {API} from './api.js';
 
-const api = new API({endPoint: `https://es8-demo-srv.appspot.com/big-trip`, authorization: `Basic eo0w590io166444`});
+const api = new API({endPoint: `https://es8-demo-srv.appspot.com/big-trip`, authorization: `Basic eo0w590io168444`});
 
 const filterContainer = document.querySelector(`.trip-filter`);
 const pointsContainer = document.querySelector(`.trip-day__items`);
+
 
 // const getFilteredPoints = (points, filter) => {
 //   switch (filter) {
@@ -18,6 +19,8 @@ const pointsContainer = document.querySelector(`.trip-day__items`);
 //   }
 //   return ``;
 // };
+
+
 
 const renderFilters = (names) => {
   names.forEach((name) => {
