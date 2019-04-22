@@ -20,8 +20,6 @@ const pointsContainer = document.querySelector(`.trip-day__items`);
 //   return ``;
 // };
 
-
-
 const renderFilters = (names) => {
   names.forEach((name) => {
     const filterComponent = new Filter(name);

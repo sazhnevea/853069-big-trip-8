@@ -68,7 +68,9 @@ export default class PointFull extends Component {
 
     for (const pair of formData.entries()) {
       const [property, value] = pair;
-      pointEditMapper[property] && pointEditMapper[property](value);
+      if (pointEditMapper[property]) {
+        pointEditMapper[property](value);
+      }
     }
     return entry;
   }
