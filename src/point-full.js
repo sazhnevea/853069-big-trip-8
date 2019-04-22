@@ -3,7 +3,7 @@ import isFunction from 'lodash/isFunction';
 import {TravelTypes} from './travel-types.js';
 import {
   getTimeOpenedPoint,
-  getTravelWay,
+  getTravelType,
   getOffersFullPoint,
   getDescription,
   getImages,
@@ -14,6 +14,8 @@ import flatpickr from './libraries/flatpickr.js';
 import moment from 'moment';
 import {API} from './api.js';
 
+const api = new API({endPoint: `https://es8-demo-srv.appspot.com/big-trip`, authorization: `Basic eo0w590io168855`});
+api.getDestinationsData().then(getDestinations);
 
 const removeFlatpickr = (element) => {
   element.flatpickr().destroy();
@@ -24,7 +26,7 @@ export default class PointFull extends Component {
     super();
     this._destination = data.destination;
     this._type = data.type;
-    this._pictures = data.picture;
+    this._pictures = data.pictures;
     this._description = data.description;
     this._price = data.price;
     this._time = data.time;
@@ -33,6 +35,7 @@ export default class PointFull extends Component {
     this._isFaforite = data.isFavorite;
     this._onDelete = false;
 
+    this._destinations = null;
     this._onSubmit = null;
     this._onTravelType = null;
     this._state.isTimeClicked = false;
@@ -46,7 +49,7 @@ export default class PointFull extends Component {
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
-    this._onTravelWayClick = this._onTravelWayClick.bind(this);
+    this._onTravelTypeClick = this._onTravelTypeClick.bind(this);
 
   }
 
@@ -58,6 +61,7 @@ export default class PointFull extends Component {
         start: ``,
         end: ``,
       },
+      offers: this._offers,
     };
 
     const pointEditMapper = PointFull.createMapper(entry);
@@ -66,11 +70,6 @@ export default class PointFull extends Component {
       const [property, value] = pair;
       pointEditMapper[property] && pointEditMapper[property](value);
     }
-    // if (entry.destination) {
-    //   const arr = this._destination.split(` `, 2);
-    //   arr.push(entry.destination);
-    //   entry.destination = arr.join(` `);
-    // }
     return entry;
   }
 
@@ -120,15 +119,12 @@ export default class PointFull extends Component {
         <input class="point__input" type="text" placeholder="MAR 18" name="day">
       </label>
      
-       ${getTravelWay(this._type)}
+      ${getTravelType(this._type)}
 
       <div class="point__destination-wrap">
         <label class="point__destination-label" for="destination">${TravelTypes.get(this._type)}</label>
         <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination}" name="destination">
-       
-             
-
-       
+                    
       </div>
 
       ${getTimeOpenedPoint(this._time)}
@@ -147,9 +143,14 @@ export default class PointFull extends Component {
     </header>
 
     <section class="point__details">
-    
+     <section class="point__offers">
+    <h3 class="point__details-title">offers</h3>
+    <div class="point__offers-wrap">
+
       ${getOffersFullPoint(this._offers)}
 
+    </div>
+  </section>
       <section class="point__destination">
         <h3 class="point__details-title">Destination</h3>
         
@@ -171,13 +172,13 @@ export default class PointFull extends Component {
     this._element.querySelector(`button[type="reset"]`)
       .addEventListener(`click`, this._onDeleteButtonClick);
     this._element.querySelector(`.travel-way__select-group`)
-      .addEventListener(`click`, this._onTravelWayClick);
+      .addEventListener(`click`, this._onTravelTypeClick);
 
     const getFlatpickrConfig = (value) => {
       const config = {
         defaultDate: [moment(value).valueOf()],
         enableTime: true,
-        noCalendar: true,
+        noCalendar: false,
         altInput: true,
         altFormat: `h:i K`,
         dateFormat: `h:i K`,
@@ -202,11 +203,11 @@ export default class PointFull extends Component {
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-
     const formData = new FormData(this._element.querySelector(`form`));
     const newData = this._processForm(formData);
     isFunction(this._onSubmit) && this._onSubmit(newData);
     this.update(newData);
+
   }
 
   _onDeleteButtonClick(evt) {
@@ -214,17 +215,16 @@ export default class PointFull extends Component {
     isFunction(this._onDelete) && this._onDelete({id: this._id});
   }
 
-  _onTravelWayClick(evt) {
+  _onTravelTypeClick(evt) {
     evt.preventDefault();
     if (evt.target.tagName === `LABEL`) {
       const typeTaken = evt.target.textContent.split(` `)[1].toLowerCase();
-      const api = new API({endPoint: `https://es8-demo-srv.appspot.com/big-trip`, authorization: `Basic eo0w590io258587`});
       api.getOffers().then((values) => this.changeOffers(values, typeTaken));
     }
-    // isFunction(this._onTravelType) && this._onTravelType();
-    const test = this._element.querySelector(`.point__offers-wrap`);
-    test.innerHTML = ``;
-    test.innerHTML = getOffersFullPoint(this._offers) && getOffersFullPoint(this._offers);
+
+    const offersElement = this._element.querySelector(`.point__offers-wrap`);
+    offersElement.innerHTML = ``;
+    offersElement.innerHTML = getOffersFullPoint(this._offers) ? getOffersFullPoint(this._offers) : ``;
   }
 
   changeOffers(offers, type) {
@@ -243,6 +243,43 @@ export default class PointFull extends Component {
     this._price = data.price;
     this._destination = data.destination;
     this._time = data.time;
+  }
+
+  lockButtons() {
+    this._element.querySelector(`.point__button--save`).disabled = true;
+    this._element.querySelector(`button[type="reset"]`).disabled = true;
+    this._element.querySelector(`.point__destination-input`).disabled = true;
+  }
+
+  unlockButtons() {
+    this._element.querySelector(`.point__button--save`).disabled = false;
+    this._element.querySelector(`button[type="reset"]`).disabled = false;
+    this._element.querySelector(`.point__destination-input`).disabled = false;
+  }
+
+  savingButtonMode() {
+    this._element.querySelector(`.point__button--save`).textContent = `Saving...`;
+  }
+
+  saveButtonMode() {
+    this._element.querySelector(`.point__button--save`).textContent = `Save`;
+  }
+
+  deletingButtonMode() {
+    this._element.querySelector(`button[type="reset"]`).textContent = `Deleting...`;
+  }
+
+  deleteButtonMode() {
+    this._element.querySelector(`button[type="reset"]`).textContent = `Delete`;
+  }
+
+  getWarning() {
+    this._element.classList.add(`shake`);
+    this._element.setAttribute(`style`, `border: 2px solid red`);
+  }
+
+  removeWarning() {
+    this._element.classList.remove(`shake`);
   }
 
 

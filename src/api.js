@@ -58,7 +58,7 @@ export const API = class {
   }
 
   deletePoint({id}) {
-    return this._load({url: `/points${id}`, method: Method.DELETE});
+    return this._load({url: `/points/${id}`, method: Method.DELETE});
 
   }
 
@@ -71,34 +71,4 @@ export const API = class {
         throw err;
       });
   }
-
-
 };
-
-
-// export const load = (url) => {
-//   return new Promise((onSuccess, onError) => {
-//     const xhr = new XMLHttpRequest();
-//     xhr.resonseType = `json`;
-
-//     xhr.addEventListener(`load`, () => {
-//       if (xhr.status === 200) {
-//         onSuccess(xhr.response);
-//       } else {
-//         onError(`Неизвестный статус: ` + xhr.status + ` ` + xhr.statusText);
-//       }
-//     });
-//     xhr.addEventListener(`error`, () => {
-//       onError(`Произошла ошибка соединения`);
-//     });
-//     xhr.addEventListener(`timeout`, () => {
-//       onError(`Запрос не успел выполниться за ` + xhr.timeout + `мс`);
-//     });
-
-//     xhr.setTimeout = 10000; // 10s
-
-//     xhr.open(`GET`, url);
-
-//     xhr.send();
-//   });
-// };

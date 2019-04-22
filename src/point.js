@@ -35,7 +35,7 @@ export default class Point extends Component {
       <h3 class="trip-point__title">${TravelTypes.get(this._type) + ` ` + this._destination}</h3>
       ${getTimeClosedPoint(this._time)}
       <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
-      ${this._offers.length > 0 ? getOffersPoint(this._offers) : ``}
+      ${this._offers.length > 0 ? getOffersPoint(this._offers.slice(0, 3)) : ``}
     </article>`.trim();
   }
 
@@ -44,8 +44,7 @@ export default class Point extends Component {
   }
 
   createListeners() {
-    const editButton = this._element.querySelector(`.trip-point__title`);
-    editButton.addEventListener(`click`, this._onEditButtonClick);
+    this._element.addEventListener(`click`, this._onEditButtonClick);
   }
 
   removeListeners() {

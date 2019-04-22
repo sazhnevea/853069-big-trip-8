@@ -1,15 +1,18 @@
-import {Icons, TravelTypes} from '../travel-types.js';
+import {Icons} from '../travel-types.js';
 import {types} from '../mock/data-point.js';
-const getChecked = (defaultData, userData) =>
-  (defaultData === userData) && `checked`;
+
+const getChecked = (defaultData, userData) => {
+  const defaultType = defaultData[0].toLowerCase();
+  return (defaultType === userData) && `checked`;
+};
 
 const getIcon = (value) => {
   return Icons.get(value);
 };
 
-export const getTravelWay = (way) => `
-  <div class="travel-way">
-    <label class="travel-way__label" for="travel-way__toggle">${getIcon(way)}</label>
+export const getTravelType = (type) =>
+  `<div class="travel-way">
+    <label class="travel-way__label" for="travel-way__toggle">${getIcon(type)}</label>
     <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
     <div class="travel-way__select">
       <div class="travel-way__select-group">
@@ -20,13 +23,12 @@ export const getTravelWay = (way) => `
           id="travel-way-${item[0]}"
           name="travel-way"
           value="${item[0]}" 
-          ${getChecked(item, way)}
+          ${getChecked(item, type)}
           >
-
          <label
          class="travel-way__select-label"
           for="travel-way-${item[0]}">${item[1]} ${item[0]}</label>
-         `)}
+         `).join(``)}
       </div>
     </div>
   </div>`;
