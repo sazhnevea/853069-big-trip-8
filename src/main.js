@@ -4,8 +4,13 @@ import TotalCost from './total-cost.js';
 
 // import Stats from './statistics.js';
 import Filter from './filter.js';
-import {filterNames} from './mock/filter-names';
 import {API} from './api.js';
+
+const filterNames = [
+  `everything`,
+  `future`,
+  `past`,
+];
 
 const api = new API({endPoint: `https://es8-demo-srv.appspot.com/big-trip`, authorization: `Basic eo0w489io264444`});
 

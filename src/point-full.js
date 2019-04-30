@@ -12,7 +12,6 @@ import {
   getPrice,
   getDestinations,
 } from './point/';
-// import flatpickr from './libraries/flatpickr.js';
 import moment from 'moment';
 import {API} from './api.js';
 

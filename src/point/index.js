@@ -7,7 +7,6 @@ import {getImages} from './images';
 import {getPrice} from './price';
 import {getDestinations} from './destinations';
 
-
 export {
   getIcon,
   getOffersPoint,

@@ -9,16 +9,14 @@ const formatTime = (time) => {
   return moment(time).format(`LT`);
 };
 
-export const getTimeClosedPoint = ({start, end}) => {
-  return `
-  <p class="trip-point__schedule">
+export const getTimeClosedPoint = ({start, end}) =>
+  `<p class="trip-point__schedule">
     <span class="trip-point__timetable">${formatTime(start)}&nbsp;&mdash; ${formatTime(end)}</span>
     <span class="trip-point__duration">${getDuration(start, end)}</span>
-  </p>`;
-};
+   </p>`;
 
-export const getTimeOpenedPoint = ({start, end}) => `
-  <div class="point__time">
-    <input class="point__input" type="text" value="${formatTime(start)}" name="date-start" placeholder="${formatTime(start)}">
-    <input class="point__input" type="text" value="${formatTime(end)}" name="date-end" placeholder="${formatTime(end)}">
-  </div>`;
+export const getTimeOpenedPoint = ({start, end}) =>
+  `<div class="point__time">
+     <input class="point__input" type="text" value="${formatTime(start)}" name="date-start" placeholder="${formatTime(start)}">
+     <input class="point__input" type="text" value="${formatTime(end)}" name="date-end" placeholder="${formatTime(end)}">
+   </div>`;

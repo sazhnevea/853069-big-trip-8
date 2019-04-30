@@ -1,5 +1,16 @@
 import {Icons} from '../travel-types.js';
-import {types} from '../mock/data-point.js';
+const types = [
+  [`Taxi`, `🚕`, `to`],
+  [`Bus`, `🚌`, `to`],
+  [`Train`, `🚂`, `to`],
+  [`Ship`, `🛳️`, `to`],
+  [`Transport`, `🚊`, `to`],
+  [`Drive`, `🚗`, `to`],
+  [`Flight`, `✈️`, `to`],
+  [`Check-in`, `🏨`, `in`],
+  [`Sightseeing`, `🏛️`, `in`],
+  [`Restaurant`, `🍴`, `in`],
+];
 
 const getChecked = (defaultData, userData) => {
   const defaultType = defaultData[0].toLowerCase();

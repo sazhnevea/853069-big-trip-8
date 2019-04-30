@@ -19,7 +19,6 @@ const checkStatus = (response) => {
 
 const toJSON = (response) => response.json();
 
-
 export const API = class {
   constructor({endPoint, authorization}) {
     this._endPoint = endPoint;
@@ -38,13 +37,11 @@ export const API = class {
       .then(ModelOffers.parseOffers);
   }
 
-
   getPoints() {
     return this._load({url: `/points`})
       .then(toJSON)
       .then(ModelPoints.parsePoints);
   }
-
 
   updatePoint({id, data}) {
     return this._load({
@@ -59,7 +56,6 @@ export const API = class {
 
   deletePoint({id}) {
     return this._load({url: `/points/${id}`, method: Method.DELETE});
-
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
