@@ -1,3 +1,5 @@
+import 'flatpickr/dist/flatpickr.min.css';
+import flatpickr from 'flatpickr';
 import Component from './сomponent.js';
 import isFunction from 'lodash/isFunction';
 import {TravelTypes} from './travel-types.js';
@@ -10,7 +12,7 @@ import {
   getPrice,
   getDestinations,
 } from './point/';
-import flatpickr from './libraries/flatpickr.js';
+// import flatpickr from './libraries/flatpickr.js';
 import moment from 'moment';
 import {API} from './api.js';
 
@@ -77,7 +79,7 @@ export default class PointFull extends Component {
 
   static createMapper(target) {
     return {
-      'price': (value) => (target.price = value),
+      'price': (value) => (target.price = Number(value)),
       'destination': (value) => (target.destination = value),
       'travel-way': (value) => (target.type = value),
       'date-start': (value) => (target.time.start = moment(value, `LT`).valueOf()),
@@ -211,7 +213,6 @@ export default class PointFull extends Component {
       this._onSubmit(newData);
     }
     this.update(newData);
-
   }
 
   _onDeleteButtonClick(evt) {

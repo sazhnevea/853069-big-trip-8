@@ -1,15 +1,17 @@
 import Point from './point.js';
 import PointFull from './point-full.js';
+import TotalCost from './total-cost.js';
+
 // import Stats from './statistics.js';
 import Filter from './filter.js';
 import {filterNames} from './mock/filter-names';
 import {API} from './api.js';
 
-const api = new API({endPoint: `https://es8-demo-srv.appspot.com/big-trip`, authorization: `Basic eo0w590io168444`});
+const api = new API({endPoint: `https://es8-demo-srv.appspot.com/big-trip`, authorization: `Basic eo0w489io264444`});
 
 const filterContainer = document.querySelector(`.trip-filter`);
 const pointsContainer = document.querySelector(`.trip-day__items`);
-
+const costContainer = document.querySelector(`.trip`);
 
 // const getFilteredPoints = (points, filter) => {
 //   switch (filter) {
@@ -32,6 +34,9 @@ const renderFilters = (names) => {
 };
 
 const renderPoints = (pointsData) => {
+  const costComponent = new TotalCost(pointsData);
+  costContainer.appendChild(costComponent.render());
+
   pointsData.forEach((pointData) => {
     const pointComponent = new Point(pointData);
     const fullPointComponent = new PointFull(pointData);
@@ -59,6 +64,12 @@ const renderPoints = (pointsData) => {
           pointComponent.render();
           pointsContainer.replaceChild(pointComponent.element, fullPointComponent.element);
           fullPointComponent.unrender();
+          api.getPoints()
+            .then((points) => {
+              costComponent.unrender();
+              costComponent.update(points);
+              costContainer.appendChild(costComponent.render());
+            });
         })
         .catch((err) => {
           fullPointComponent.getWarning();
@@ -74,8 +85,11 @@ const renderPoints = (pointsData) => {
       fullPointComponent.deletingButtonMode();
       api.deletePoint({id})
         .then(() => api.getPoints())
-        .then(() => {
+        .then((points) => {
           fullPointComponent.unrender();
+          costComponent.unrender();
+          costComponent.update(points);
+          costContainer.appendChild(costComponent.render());
         })
         .catch((err) => {
           fullPointComponent.getWarning();
@@ -94,6 +108,7 @@ const renderPoints = (pointsData) => {
 // });
 
 renderFilters(filterNames);
+
 api.getPoints()
   .then((points) => {
     renderPoints(points);
